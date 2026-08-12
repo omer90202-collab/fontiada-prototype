@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>פונטיאדה — בית נגיש לפונטים</title>
+<!--
+  ═══════════════════════════════════════════════════════════════
+  פונטיאדה — דף הבית (גרסה 4 — קוהרנטית)
+  מיושר לשפה שהתגבשה בקטלוג ובדפי הפונט:
+  לבן · קווי שיער · גריד צמוד · צבע רק בריחוף · עיגול בריחוף בלבד
+  סצנות: הירו+טסטר → מרקיזה → גריד קטלוג (Fontef-style) →
+         פוסטר מומלץ → תמחור → הצהרה → חינמיים
+  ═══════════════════════════════════════════════════════════════
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#ffffff; --ink:#111111; --accent:#e8320f; --cobalt:#1439c4;
+    --green:#0c7a43; --soft:#f4f2ee; --line:rgba(17,17,17,.15);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--ink);font-family:'Heebo',sans-serif;overflow-x:hidden;line-height:1.5}
+  ::selection{background:var(--accent);color:#fff}
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit;cursor:pointer}
+  .hl{display:block;overflow:hidden}
+  .hl>span{display:block;will-change:transform}
+
+  /* ── ניווט ── */
+  header{position:fixed;inset-inline:0;top:0;z-index:90;transition:.3s}
+  header.scrolled{background:rgba(255,255,255,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;justify-content:space-between;align-items:center;padding:18px 4vw}
+  .nav .logo img{height:34px;width:auto}
+  .nav-links{display:flex;gap:26px;font-size:15px;font-weight:500;align-items:center}
+  .nav-links a{position:relative}
+  .nav-links a::after{content:'';position:absolute;right:0;bottom:-4px;height:2px;width:0;background:var(--accent);transition:.25s}
+  .nav-links a:hover::after{width:100%}
+  .nav-cta{background:var(--ink);color:#fff;border:none;border-radius:0;padding:10px 22px;font-size:15px;font-weight:700;transition:.25s}
+  .nav-cta:hover{background:var(--accent)}
+  .nav-user{font-weight:700;font-size:15px}
+  footer.site-footer{display:flex;justify-content:space-between;align-items:center;padding:26px 4vw;font-size:13.5px;color:rgba(17,17,17,.55);border-top:1px solid var(--line);flex-wrap:wrap;gap:8px}
+  footer.site-footer .flinks{display:flex;gap:18px}
+
+  /* ═══ 1. הירו + טסטר ═══ */
+  .sc-hero{min-height:92vh;display:flex;flex-direction:column;justify-content:center;padding:140px 4vw 60px}
+  .hero-kicker{font-size:14px;letter-spacing:.28em;font-weight:700;color:var(--accent);margin-bottom:18px}
+  .sc-hero h1{font-size:clamp(44px,6.6vw,100px);font-weight:900;line-height:1.06;letter-spacing:-0.02em;max-width:18ch}
+  .sc-hero h1 .paint{color:var(--accent)}
+  .hero-sub{margin-top:22px;font-size:clamp(16px,1.8vw,19px);color:rgba(17,17,17,.65);max-width:54ch}
+  .hero-sub b{color:var(--ink)}
+  .tester-box{margin-top:44px;border:1px solid var(--line);background:#fff;padding:26px 28px 20px;transition:border-color .3s}
+  .tester-box:focus-within{border-color:var(--ink)}
+  .tester-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+  .tester-top .t-label{font-size:13.5px;font-weight:700;color:rgba(17,17,17,.5)}
+  .font-chips{display:flex;gap:8px;flex-wrap:wrap}
+  .chip{border:1px solid var(--line);background:transparent;border-radius:0;padding:7px 14px;font-size:13.5px;font-weight:500;transition:.2s}
+  .chip:hover{border-color:var(--ink)}
+  .chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .tester-box .big{font-size:clamp(40px,6.4vw,92px);line-height:1.18;outline:none;word-break:break-word;min-height:1.25em;caret-color:var(--accent)}
+
+  /* ═══ 2. מרקיזה ═══ */
+  .sc-marquee{background:var(--ink);color:#fff;padding:18px 0;overflow:hidden}
+  .mq-track{display:flex;width:max-content;white-space:nowrap;font-weight:700;font-size:clamp(15px,1.8vw,21px);will-change:transform}
+  .mq-track span{padding-inline:20px}
+  .mq-track .dot{color:var(--accent)}
+
+  /* ═══ 3. גריד קטלוג — כמו עמוד הקטלוג, אחד לאחד ═══ */
+  .home-cat{padding:90px 1.5vw 0}
+  .hc-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:10px;padding:0 2vw 24px}
+  .hc-head h2{font-size:clamp(30px,4vw,54px);font-weight:900}
+  .hc-head a{font-size:15px;font-weight:700;border-bottom:2px solid var(--accent)}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+  @media (max-width:1100px){ .grid{grid-template-columns:repeat(2,1fr)} }
+  @media (max-width:700px){ .grid{grid-template-columns:1fr} }
+  .fcard{background:#fff;color:var(--ink);min-height:280px;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:56px 24px 52px;transition:color .3s ease}
+  .fcard::before{content:'';position:absolute;inset:0;background:var(--hc);opacity:0;border-radius:0;transition:opacity .3s ease,border-radius .7s cubic-bezier(.3,1.2,.55,1)}
+  .fcard:hover{color:#fff}
+  .fcard:hover::before{opacity:1;border-radius:26px}
+  .fcard > *{position:relative;z-index:1}
+  .fcard .sample{font-size:clamp(40px,4.6vw,64px);line-height:1.18;word-break:break-word}
+  .fcard .meta2{position:absolute;bottom:18px;inset-inline:0;font-size:13px;opacity:.6;font-weight:500}
+  .fcard .cardops{position:absolute;top:16px;inset-inline:0;display:flex;justify-content:center;gap:8px;opacity:0;transform:translateY(-6px);transition:.28s ease}
+  .fcard:hover .cardops{opacity:1;transform:translateY(0)}
+  .fcard .cardops button,.fcard .cardops span{background:transparent;border:1.5px solid rgba(255,255,255,.65);color:#fff;font-size:13px;font-weight:700;padding:6px 14px;cursor:pointer;font-family:inherit;transition:.2s}
+  .fcard .cardops button:hover{background:#fff;color:var(--ink);border-color:#fff}
+  .hc-more{display:flex;justify-content:center;padding:34px 0 0}
+  .btn-big{display:inline-flex;align-items:center;gap:12px;background:var(--ink);color:#fff;font-size:17px;font-weight:700;border:none;border-radius:0;padding:16px 34px;transition:.25s}
+  .btn-big:hover{background:var(--accent);transform:translateY(-3px)}
+
+  /* ═══ 4. פוסטר מומלץ — בלוק צבע אחד, כמו תא קטלוג בריחוף קבוע ═══ */
+  .featured{padding:110px 1.5vw 0}
+  .feat-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:10px;padding:0 2vw 24px}
+  .feat-head .kicker{font-size:13.5px;letter-spacing:.26em;font-weight:700;color:rgba(17,17,17,.5)}
+  .feat-head a{font-size:15px;font-weight:700;border-bottom:2px solid var(--accent)}
+  .poster{position:relative;height:56vh;min-height:340px;overflow:hidden;display:grid;place-items:center;color:#fff}
+  .poster .fname{font-size:clamp(90px,16vw,240px);line-height:1;will-change:transform}
+  .poster .fmeta{position:absolute;bottom:24px;inset-inline:0;text-align:center;font-size:14.5px;font-weight:500;color:rgba(255,255,255,.85)}
+
+  /* ═══ 5. תמחור ═══ */
+  .sc-pricing{padding:120px 6vw}
+  .pr-head{text-align:center;margin-bottom:56px}
+  .pr-head h2{font-size:clamp(34px,4.8vw,64px);font-weight:900;line-height:1.1}
+  .pr-head p{margin-top:14px;font-size:17px;color:rgba(17,17,17,.6)}
+  .pr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);max-width:1200px;margin-inline:auto}
+  .pcard{background:#fff;padding:34px 28px;display:flex;flex-direction:column;gap:10px;position:relative;transition:.3s}
+  .pcard:hover{background:var(--soft)}
+  .pcard .pname{font-weight:700;font-size:17px}
+  .pcard .pnum{font-size:clamp(42px,4.2vw,58px);font-weight:900;line-height:1}
+  .pcard .pnum small{font-size:.45em;font-weight:700}
+  .pcard .pdesc{font-size:14.5px;color:rgba(17,17,17,.62);line-height:1.55}
+  .pcard.hot{background:var(--cobalt);color:#fff}
+  .pcard.hot:hover{background:var(--cobalt)}
+  .pcard.hot .pdesc{color:rgba(255,255,255,.8)}
+  .pcard.hot .badge{position:absolute;top:14px;inset-inline-start:24px;background:#fff;color:var(--cobalt);font-size:13px;font-weight:700;padding:4px 14px}
+  .pr-note{text-align:center;margin-top:32px;font-size:15px;color:rgba(17,17,17,.55)}
+
+  /* ═══ 6. הצהרה + חינמיים ═══ */
+  .statement{padding:110px 6vw;text-align:center;border-top:1px solid var(--line)}
+  .statement h2{font-size:clamp(40px,6.4vw,96px);font-weight:900;line-height:1.08;letter-spacing:-0.02em}
+  .statement h2 .dot{color:var(--accent)}
+  .statement p{margin-top:16px;font-size:17px;color:rgba(17,17,17,.6)}
+  .statement .btn-big{margin-top:30px}
+
+  .sc-free{padding:0 1.5vw 110px}
+  .free-box{background:var(--green);color:#fff;padding:64px 6vw;text-align:center}
+  .free-box h2{font-size:clamp(28px,4vw,52px);font-weight:900;line-height:1.12}
+  .free-box p{margin-top:14px;font-size:16.5px;color:rgba(255,255,255,.85);max-width:600px;margin-inline:auto}
+  .free-form{margin-top:30px;display:flex;justify-content:center;gap:0;flex-wrap:wrap}
+  .free-form input{border:1.5px solid #fff;background:transparent;color:#fff;border-radius:0;padding:15px 24px;font-size:15.5px;font-family:inherit;width:min(320px,78vw);outline:none}
+  .free-form input::placeholder{color:rgba(255,255,255,.7)}
+  .free-form button{background:#fff;color:var(--green);border:1.5px solid #fff;border-radius:0;padding:15px 30px;font-size:15.5px;font-weight:700;transition:.25s}
+  .free-form button:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+  @media (max-width:760px){ .nav-links{display:none} }
+
+  /* ── מצב סטטי ── */
+  html.static .sc-hero{min-height:auto;padding:150px 4vw 70px}
+  html.static .poster{height:440px}
+  html.static .poster .fname{transform:none!important}
+</style>
+</head>
+<body>
+
+<header id="siteHeader"><div id="site-header"></div></header>
+
+<!-- ═══ 1. הירו + טסטר ═══ -->
+<section class="sc-hero" id="scHero">
+  <div class="hero-kicker hl"><span>בית נגיש לפונטים</span></div>
+  <h1>
+    <span class="hl"><span>פונטים עבריים</span></span>
+    <span class="hl"><span><span class="paint">שכיף</span> לקנות.</span></span>
+  </h1>
+  <p class="hero-sub" data-reveal>33 משפחות, כל אחת במחיר אחד שכולל הכל — <b>כל המשקלים, כל השימושים, כולל מע״מ.</b> בלי טבלאות רישוי ובלי אותיות קטנות.</p>
+
+  <div class="tester-box" data-reveal>
+    <div class="tester-top">
+      <span class="t-label">תקלידו משהו — זה החלק הכיפי</span>
+      <div class="font-chips" id="fontChips"></div>
+    </div>
+    <div class="big" id="heroType" contenteditable="true" spellcheck="false" aria-label="נסו את הפונטים">חתונה של דנה ויובל ♥ 24.8</div>
+  </div>
+</section>
+
+<!-- ═══ 2. מרקיזה ═══ -->
+<div class="sc-marquee" aria-hidden="true">
+  <div class="mq-track" id="mqTrack">
+    <span>המחיר שרואים = המחיר שמשלמים</span><span class="dot">✦</span>
+    <span>רישיון אחד לכל שימוש</span><span class="dot">✦</span>
+    <span>תשלום פעם אחת, שלכם לתמיד</span><span class="dot">✦</span>
+    <span>בלי מנויים. לעולם.</span><span class="dot">✦</span>
+    <span>הורדה מיידית</span><span class="dot">✦</span>
+  </div>
+</div>
+
+<!-- ═══ 3. גריד קטלוג ═══ -->
+<section class="home-cat">
+  <div class="hc-head">
+    <h2>חדשים על המדף</h2>
+    <a href="catalog.html">כל 33 הפונטים ←</a>
+  </div>
+  <div class="grid" id="homeGrid"></div>
+  <div class="hc-more"><button class="btn-big" onclick="location.href='catalog.html'">לקטלוג המלא ←</button></div>
+</section>
+
+<!-- ═══ 4. פוסטר מומלץ ═══ -->
+<section class="featured">
+  <div class="feat-head">
+    <span class="kicker">הפונט המומלץ החודש</span>
+    <a href="font.html?f=nogah" id="featLink"></a>
+  </div>
+  <a class="poster" id="featPoster" href="font.html?f=nogah">
+    <div class="fname" id="featName"></div>
+    <div class="fmeta" id="featMeta"></div>
+  </a>
+</section>
+
+<!-- ═══ 5. תמחור ═══ -->
+<section class="sc-pricing" id="pricing">
+  <div class="pr-head">
+    <h2>מחיר אחד. בלי טבלאות.</h2>
+    <p>כל מחיר כולל מע״מ, את כל המשקלים ואת כל השימושים — דפוס, ווב, אפליקציות, לוגו.</p>
+  </div>
+  <div class="pr-grid">
+    <div class="pcard">
+      <div class="pname">פונט סטנדרט</div>
+      <div class="pnum">₪39</div>
+      <div class="pdesc">רוב הקטלוג. משפחה שלמה במחיר של פיצה.</div>
+    </div>
+    <div class="pcard">
+      <div class="pname">פונט פרימיום</div>
+      <div class="pnum">₪59</div>
+      <div class="pdesc">המיוחדים באמת — נבנו מאפס, אין דומים להם בשוק.</div>
+    </div>
+    <div class="pcard hot">
+      <div class="badge">הכי משתלם</div>
+      <div class="pname">בחרו 5 פונטים</div>
+      <div class="pnum">₪149</div>
+      <div class="pdesc">כל 5 שתבחרו (עד 2 פרימיום). חיסכון של ~24%.</div>
+    </div>
+    <div class="pcard">
+      <div class="pname">כל הקטלוג</div>
+      <div class="pnum">₪299 <small>מחיר השקה</small></div>
+      <div class="pdesc">כל 33 הפונטים. בערך ₪9 לפונט. כן, ברצינות.</div>
+    </div>
+  </div>
+  <div class="pr-note">להשוואה: הפונט הזול ביותר אצל המתחרים מתחיל ב-₪222 — למשקל אחד, לשימוש אחד.</div>
+</section>
+
+<!-- ═══ 6. הצהרה ═══ -->
+<section class="statement">
+  <h2 data-split>בית נגיש לפונטים<span class="dot">.</span></h2>
+  <p data-reveal>זה לא סלוגן, זו כל התוכנית העסקית.</p>
+  <button class="btn-big" onclick="location.href='about.html'">הסיפור שלנו ←</button>
+</section>
+
+<!-- ═══ 7. חינמיים ═══ -->
+<section class="sc-free" id="free">
+  <div class="free-box" data-reveal>
+    <h2>יש לנו גם חינמיים.</h2>
+    <p>9 משפחות בקוד פתוח (OFL) — אסור לנו למכור אותן, וגם לא היינו רוצים. תנו מייל, קחו הכל.</p>
+    <form class="free-form" onsubmit="toast('פרוטוטייפ — ההרשמה תעבוד באתר האמיתי 😉');return false">
+      <input type="email" placeholder="המייל שלכם = 9 משפחות חינם" aria-label="אימייל">
+      <button type="submit">קחו בחינם</button>
+    </form>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.3.4/dist/lenis.min.js"></script>
+<script src="shared.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+renderHeader('home'); renderFooter();
+
+const STATIC = matchMedia('(prefers-reduced-motion: reduce)').matches
+            || new URLSearchParams(location.search).has('static');
+if (STATIC) document.documentElement.classList.add('static');
+
+if (!STATIC) {
+  const lenis = new Lenis({ lerp:.09 });
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add(t => lenis.raf(t*1000));
+  gsap.ticker.lagSmoothing(0);
+  ScrollTrigger.create({ start:80, onToggle:s => document.getElementById('siteHeader').classList.toggle('scrolled', s.isActive) });
+  gsap.from('.sc-hero .hl > span', { yPercent:112, duration:1.1, stagger:.13, ease:'power4.out', delay:.15 });
+}
+
+function splitWords(el){
+  const out = [];
+  (function walk(node){
+    [...node.childNodes].forEach(n => {
+      if (n.nodeType === 3) {
+        const frag = document.createDocumentFragment();
+        n.textContent.split(/(\s+)/).forEach(part => {
+          if (!part) return;
+          if (/^\s+$/.test(part)) frag.appendChild(document.createTextNode(part));
+          else { const s = document.createElement('span'); s.style.display='inline-block'; s.textContent = part; out.push(s); frag.appendChild(s); }
+        });
+        n.replaceWith(frag);
+      } else if (n.nodeType === 1) walk(n);
+    });
+  })(el);
+  return out;
+}
+
+/* ── טסטר חי ── */
+const heroType = document.getElementById('heroType');
+const chipsWrap = document.getElementById('fontChips');
+const heroCycle = ['neohari','nogah','katzin','rahut','sapir','tsuk'];
+let userTouched = false, heroTimer = null, heroIdx = 0;
+function setTesterFont(slug){
+  heroType.style.fontFamily = `'${slug}', 'Heebo', sans-serif`;
+  [...chipsWrap.children].forEach(c => c.classList.toggle('on', c.dataset.slug === slug));
+}
+heroCycle.forEach(slug => {
+  const f = fontBySlug(slug);
+  const b = document.createElement('button');
+  b.className = 'chip'; b.dataset.slug = slug; b.textContent = f.he;
+  b.onclick = () => { userTouched = true; clearInterval(heroTimer); setTesterFont(slug); };
+  chipsWrap.appendChild(b);
+});
+setTesterFont(heroCycle[0]);
+if (!STATIC) {
+  heroTimer = setInterval(() => {
+    if (userTouched) return;
+    heroIdx = (heroIdx + 1) % heroCycle.length;
+    setTesterFont(heroCycle[heroIdx]);
+  }, 2600);
+  heroType.addEventListener('focus', () => { userTouched = true; clearInterval(heroTimer); });
+}
+
+/* ── מרקיזה מאיצה ── */
+const mq = document.getElementById('mqTrack');
+mq.innerHTML += mq.innerHTML;
+if (!STATIC) {
+  let mqX = 0, mqSpeed = .5;
+  gsap.ticker.add(() => { mqX = (mqX + mqSpeed) % (mq.scrollWidth/2); mq.style.transform = `translateX(${mqX}px)`; });
+  ScrollTrigger.create({ onUpdate:s => { mqSpeed = .5 + Math.min(Math.abs(s.getVelocity())/2500, 2.5); } });
+}
+
+/* ── גריד קטלוג ביתי — אותו כרטיס בדיוק כמו בעמוד הקטלוג ── */
+const homeGrid = document.getElementById('homeGrid');
+const HOME_PICKS = ['nogah','tsuk','rahut','barzel','katav','sapir'];
+HOME_PICKS.forEach(slug => {
+  const f = fontBySlug(slug);
+  const i = FONTS.indexOf(f);
+  const a = document.createElement('a');
+  a.className = 'fcard';
+  a.href = 'font.html?f=' + f.slug;
+  a.style.setProperty('--hc', cardColor(i));
+  a.innerHTML = `
+    <div class="cardops">
+      <span>לצפייה ↗</span>
+      <button aria-label="הוסיפו את ${f.he} לעגלה">לעגלה +</button>
+    </div>
+    <div class="sample" style="font-family:'${f.slug}'">${f.he}</div>
+    <div class="meta2">${f.he} · ${f.tag} · ₪${f.tier}</div>`;
+  a.querySelector('.cardops button').addEventListener('click', e => {
+    e.preventDefault(); e.stopPropagation();
+    Cart.add(f.slug);
+  });
+  homeGrid.appendChild(a);
+});
+
+/* ── פוסטר מומלץ ── */
+const FEATURED = 'nogah';
+(function buildFeatured(){
+  const f = fontBySlug(FEATURED);
+  const i = FONTS.indexOf(f);
+  document.getElementById('featLink').textContent = `לדף של ${f.he} ←`;
+  const poster = document.getElementById('featPoster');
+  poster.style.background = cardColor(i);
+  const nm = document.getElementById('featName');
+  nm.textContent = f.he; nm.style.fontFamily = `'${FEATURED}'`;
+  document.getElementById('featMeta').textContent = `${f.he} · ${f.tag} · משפחה מלאה · ₪${f.tier} כולל מע״מ`;
+  if (!STATIC) {
+    gsap.fromTo(nm, { yPercent:18 }, { yPercent:-18, ease:'none',
+      scrollTrigger:{ trigger:poster, start:'top bottom', end:'bottom top', scrub:.5 } });
+  }
+})();
+
+/* ── דפוסי עזר: הסתרה רק ב-onEnter ── */
+if (!STATIC) {
+  gsap.utils.toArray('[data-reveal]').forEach(el => {
+    ScrollTrigger.create({ trigger:el, start:'top 92%', once:true,
+      onEnter:() => gsap.from(el, { opacity:0, y:36, duration:1, ease:'power3.out' }) });
+  });
+  gsap.utils.toArray('[data-split]').forEach(el => {
+    ScrollTrigger.create({ trigger:el, start:'top 90%', once:true,
+      onEnter:() => gsap.from(splitWords(el), { opacity:0, y:30, duration:.8, stagger:.045, ease:'power3.out' }) });
+  });
+  ScrollTrigger.batch('[data-stagger]', { start:'top 92%', once:true, onEnter:els => gsap.from(els, { opacity:0, y:50, duration:.85, stagger:.11, ease:'power3.out' }) });
+  gsap.utils.toArray('[data-count]').forEach(el => {
+    const target = parseFloat(el.dataset.count), obj = { v:0 };
+    ScrollTrigger.create({ trigger:el, start:'top 92%', once:true,
+      onEnter:() => gsap.to(obj, { v:target, duration:1.4, ease:'power2.out', onUpdate:() => el.innerText = Math.round(obj.v) }) });
+  });
+  window.addEventListener('load', () => ScrollTrigger.refresh());
+  document.fonts.ready.then(() => ScrollTrigger.refresh());
+} else {
+  gsap.utils.toArray('[data-count]').forEach(el => el.innerText = el.dataset.count);
+}
+</script>
+</body>
+</html>

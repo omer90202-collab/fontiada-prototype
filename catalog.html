@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>הקטלוג — פונטיאדה</title>
+<!--
+  פונטיאדה — עמוד קטלוג (פרוטוטייפ 0.1)
+  פיצ'רים: טסטר גלובלי (טקסט אחד מעדכן את כל הכרטיסים), סליידר גודל,
+  סינון לפי שכבת מחיר, 21 כרטיסים — כל אחד בפונט שלו.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#ffffff; --ink:#111111; --accent:#e8320f; --cobalt:#1439c4;
+    --soft:#f4f2ee; --line:rgba(17,17,17,.15);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--ink);font-family:'Heebo',sans-serif;overflow-x:hidden;line-height:1.5}
+  ::selection{background:var(--accent);color:#fff}
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit;cursor:pointer}
+
+  header{position:fixed;inset-inline:0;top:0;z-index:90;background:rgba(255,255,255,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--ink)}
+  .nav{display:flex;justify-content:space-between;align-items:center;padding:18px 4vw}
+  .nav .logo img{height:34px;width:auto}
+  .nav-links{display:flex;gap:26px;font-size:15px;font-weight:500;align-items:center}
+  .nav-cta{background:var(--ink);color:#fff;border:none;border-radius:0;padding:10px 22px;font-size:15px;font-weight:700;transition:.25s}
+  .nav-cta:hover{background:var(--accent)}
+
+  .cat-head{padding:150px 5vw 10px;max-width:1400px;margin-inline:auto}
+  .cat-head h1{font-size:clamp(44px,7vw,100px);font-weight:900;line-height:1.05}
+  .cat-head h1 em{font-style:normal;color:var(--accent)}
+  .cat-head p{margin-top:10px;font-size:17px;color:rgba(22,19,15,.6)}
+
+  /* טסטר גלובלי */
+  .tester-bar{position:sticky;top:71px;z-index:60;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);padding:16px 5vw;border-bottom:1px solid var(--ink);display:flex;gap:16px;align-items:center;flex-wrap:wrap;max-width:100%;margin-top:26px}
+  .tester-bar input[type=text]{flex:1;min-width:220px;border:1.5px solid var(--ink);background:#fff;border-radius:0;padding:13px 22px;font-size:16px;font-family:inherit;outline:none}
+  .tester-bar input[type=text]:focus{border-color:var(--accent)}
+  .size-wrap{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:500;color:rgba(17,17,17,.6)}
+  input[type=range]{accent-color:var(--accent);width:130px}
+  .filters{display:flex;gap:0}
+  .fbtn{border:1.5px solid var(--ink);border-inline-start:none;background:transparent;border-radius:0;padding:9px 18px;font-size:14px;font-weight:500;transition:.2s}
+  .fbtn:first-child{border-inline-start:1.5px solid var(--ink)}
+  .fbtn.on{background:var(--ink);color:#fff}
+
+  /* ── גריד בסגנון Fontef: תאים לבנים צמודים עם קווי הפרדה דקים,
+     3 בשורה; בריחוף — התא נצבע בצבע של הפונט והטקסט מתהפך ללבן.
+     רפרנס: fontef.com/fonts ── */
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin:34px 1.5vw 90px}
+  @media (max-width:1100px){ .grid{grid-template-columns:repeat(2,1fr)} }
+  @media (max-width:700px){ .grid{grid-template-columns:1fr} }
+  .fcard{background:#fff;color:var(--ink);min-height:310px;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:64px 24px 56px;transition:color .3s ease}
+  /* מילוי הצבע הוא שכבה פנימית שמתעגלת בריחוף — כך הרשת נשארת ישרה
+     והעיגול-בריחוף (הפיצ'ר מ-blazetype) חי גם בתאים צמודים */
+  .fcard::before{content:'';position:absolute;inset:0;background:var(--hc);opacity:0;border-radius:0;transition:opacity .3s ease,border-radius .7s cubic-bezier(.3,1.2,.55,1)}
+  .fcard:hover{color:#fff}
+  .fcard:hover::before{opacity:1;border-radius:26px}
+  .fcard > *{position:relative;z-index:1}
+  .fcard .sample{font-size:var(--sample-size,52px);line-height:1.18;word-break:break-word;min-height:1.2em}
+  .fcard .meta2{position:absolute;bottom:20px;inset-inline:0;font-size:13px;opacity:.6;font-weight:500}
+  /* פעולות שצצות בריחוף למעלה, במקום התג */
+  .fcard .cardops{position:absolute;top:16px;inset-inline:0;display:flex;justify-content:center;gap:8px;opacity:0;transform:translateY(-6px);transition:.28s ease}
+  .fcard:hover .cardops{opacity:1;transform:translateY(0)}
+  .fcard .cardops button,.fcard .cardops span{background:transparent;border:1.5px solid rgba(255,255,255,.65);color:#fff;font-size:13px;font-weight:700;padding:6px 14px;cursor:pointer;font-family:inherit;transition:.2s}
+  .fcard .cardops button:hover{background:#fff;color:var(--ink);border-color:#fff}
+  .fcard .premium-dot{position:absolute;top:18px;inset-inline:0;margin-inline:auto;width:max-content;background:var(--soft);border:1px solid var(--line);color:var(--ink);font-size:12px;font-weight:700;padding:3px 14px;border-radius:99px;transition:.2s}
+  .fcard:hover .premium-dot{opacity:0}
+
+  .bundle-band{margin:0 5vw 80px;max-width:1500px;margin-inline:auto;background:var(--ink);color:#fff;border-radius:0;padding:40px 5vw;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+  .bundle-band h3{font-size:clamp(24px,3vw,38px);font-weight:900}
+  .bundle-band p{color:rgba(255,255,255,.7);margin-top:6px;font-size:15.5px}
+  .btn-big{display:inline-flex;align-items:center;gap:12px;background:var(--accent);color:#fff;font-size:17px;font-weight:700;border:none;border-radius:0;padding:16px 32px;transition:.25s}
+  .btn-big:hover{transform:translateY(-3px)}
+
+  footer{display:flex;justify-content:space-between;align-items:center;padding:26px 4vw;font-size:13.5px;color:rgba(22,19,15,.5);border-top:1px solid var(--line);flex-wrap:wrap;gap:8px}
+  footer .flinks{display:flex;gap:18px}
+  .nav-user{font-weight:700;font-size:15px}
+  @media (hover:none){ .fcard .addbtn{opacity:1} }
+
+  @media (max-width:760px){ .nav-links{display:none} .tester-bar{top:66px} }
+</style>
+</head>
+<body>
+
+<header><div id="site-header"></div></header>
+
+<div class="cat-head">
+  <h1>כל הפונטים. <em>33 ובגדילה.</em></h1>
+  <p>כל כרטיס מציג את הפונט עצמו — תקלידו למעלה וכל הקטלוג יציג את הטקסט שלכם.</p>
+</div>
+
+<div class="tester-bar">
+  <input type="text" id="globalText" placeholder="הקלידו כאן — כל הקטלוג יציג את זה" aria-label="טקסט לבדיקה">
+  <div class="size-wrap">גודל <input type="range" id="sizeRange" min="28" max="96" value="54"></div>
+  <div class="filters" id="filters">
+    <button class="fbtn on" data-f="all">הכל</button>
+    <button class="fbtn" data-f="39">סטנדרט ₪39</button>
+    <button class="fbtn" data-f="59">פרימיום ₪59</button>
+  </div>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<div class="bundle-band">
+  <div>
+    <h3>לוקחים 5? זה ₪149.</h3>
+    <p>ואם בא לכם הכל — כל הקטלוג ב-₪299, מחיר השקה. בערך ₪14 לפונט.</p>
+  </div>
+  <button class="btn-big" onclick="toast('חבילות — באתר האמיתי 😉')">איך זה עובד ←</button>
+</div>
+
+<div id="site-footer"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.3.4/dist/lenis.min.js"></script>
+<script src="shared.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+const STATIC = matchMedia('(prefers-reduced-motion: reduce)').matches
+            || new URLSearchParams(location.search).has('static');
+if (!STATIC) {
+  const lenis = new Lenis({ lerp:.09 });
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add(t => lenis.raf(t*1000));
+  gsap.ticker.lagSmoothing(0);
+}
+
+/* ── בניית הכרטיסים ── */
+const grid = document.getElementById('grid');
+renderHeader('catalog'); renderFooter();
+FONTS.forEach((f, i) => {
+  const a = document.createElement('a');
+  a.className = 'fcard';
+  a.href = 'font.html?f=' + f.slug;
+  a.dataset.tier = f.tier;
+  a.style.setProperty('--hc', cardColor(i));   /* צבע הריחוף של הפונט */
+  a.innerHTML = `
+    ${f.tier === 59 ? '<div class="premium-dot">פרימיום</div>' : ''}
+    <div class="cardops">
+      <span>לצפייה ↗</span>
+      <button aria-label="הוסיפו את ${f.he} לעגלה">לעגלה +</button>
+    </div>
+    <div class="sample" style="font-family:'${f.slug}'">${f.he}</div>
+    <div class="meta2">${f.he} · ${f.tag} · ₪${f.tier}</div>`;
+  a.querySelector('.cardops button').addEventListener('click', e => {
+    e.preventDefault(); e.stopPropagation();
+    Cart.add(f.slug);
+  });
+  grid.appendChild(a);
+});
+
+/* כניסה מדורגת */
+if (!STATIC) gsap.from('.fcard', { opacity:0, y:50, duration:.7, stagger:.05, ease:'power3.out', delay:.2 });
+
+/* ── טסטר גלובלי ── */
+const globalText = document.getElementById('globalText');
+globalText.addEventListener('input', () => {
+  const v = globalText.value.trim();
+  document.querySelectorAll('.fcard .sample').forEach(s => {
+    const card = s.closest('.fcard');
+    const f = FONTS.find(x => 'font.html?f=' + x.slug === card.getAttribute('href'));
+    s.textContent = v || f.he;
+  });
+});
+
+/* ── סליידר גודל ── */
+document.getElementById('sizeRange').addEventListener('input', e => {
+  document.documentElement.style.setProperty('--sample-size', e.target.value + 'px');
+});
+
+/* ── סינון ── */
+document.getElementById('filters').addEventListener('click', e => {
+  const b = e.target.closest('.fbtn'); if(!b) return;
+  document.querySelectorAll('.fbtn').forEach(x => x.classList.remove('on'));
+  b.classList.add('on');
+  const f = b.dataset.f;
+  document.querySelectorAll('.fcard').forEach(c => {
+    c.style.display = (f === 'all' || c.dataset.tier === f) ? '' : 'none';
+  });
+  ScrollTrigger.refresh();
+});
+
+window.addEventListener('load', () => ScrollTrigger.refresh());
+</script>
+</body>
+</html>

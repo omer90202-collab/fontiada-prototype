@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>התחברות — פונטיאדה</title>
+<!-- פונטיאדה — התחברות / הרשמה / איזור אישי (דמו localStorage) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#ffffff; --ink:#111111; --accent:#e8320f; --green:#0c7a43;
+    --soft:#f4f2ee; --line:rgba(17,17,17,.15);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--soft);color:var(--ink);font-family:'Heebo',sans-serif;overflow-x:hidden;line-height:1.5}
+  ::selection{background:var(--accent);color:#fff}
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit;cursor:pointer}
+
+  header{position:fixed;inset-inline:0;top:0;z-index:90;background:rgba(255,255,255,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;justify-content:space-between;align-items:center;padding:18px 4vw}
+  .nav .logo img{height:34px;width:auto}
+  .nav-links{display:flex;gap:26px;font-size:15px;font-weight:500;align-items:center}
+  .nav-cta{background:var(--ink);color:#fff;border:none;border-radius:0;padding:10px 22px;font-size:15px;font-weight:700;transition:.25s}
+  .nav-cta:hover{background:var(--accent)}
+  .nav-user{font-weight:700;font-size:15px}
+  footer{display:flex;justify-content:space-between;align-items:center;padding:26px 4vw;font-size:13.5px;color:rgba(17,17,17,.55);border-top:1px solid var(--line);flex-wrap:wrap;gap:8px}
+  footer .flinks{display:flex;gap:18px}
+
+  .wrap{max-width:520px;margin-inline:auto;padding:150px 5vw 100px}
+  .card{background:#fff;border:1.5px solid var(--ink);border-radius:0;padding:36px 32px}
+  h1{font-size:clamp(30px,4vw,44px);font-weight:900;line-height:1.1;text-align:center}
+  .sub{text-align:center;margin-top:8px;color:rgba(17,17,17,.55);font-size:15px}
+
+  .tabs{display:flex;border:1.5px solid var(--ink);border-radius:0;padding:5px;margin:26px 0 6px}
+  .tabs button{flex:1;border:none;background:transparent;border-radius:0;padding:11px;font-size:15px;font-weight:700;transition:.25s}
+  .tabs button.on{background:var(--ink);color:#fff}
+
+  .field{margin-top:16px}
+  .field label{display:block;font-size:13.5px;font-weight:700;margin-bottom:5px}
+  .field input{width:100%;border:1.5px solid var(--ink);background:var(--soft);border-radius:0;padding:13px 16px;font-size:15px;font-family:inherit;outline:none;transition:.2s}
+  .field input:focus{border-color:var(--ink)}
+  .btn{width:100%;margin-top:22px;background:var(--ink);color:#fff;font-size:17px;font-weight:900;border:none;border-radius:0;padding:16px;transition:.25s}
+  .btn:hover{background:var(--accent);transform:translateY(-2px)}
+  .note{margin-top:14px;text-align:center;font-size:12.5px;color:rgba(17,17,17,.45)}
+  .gift{margin-top:18px;background:var(--green);color:#fff;border-radius:0;padding:13px 16px;font-size:13.5px;font-weight:700;text-align:center}
+
+  /* איזור אישי */
+  .account{display:none}
+  .account h1{text-align:right}
+  .hello{font-size:15px;color:rgba(17,17,17,.6);margin-top:6px}
+  .purchases{margin-top:26px;display:flex;flex-direction:column;gap:12px}
+  .p-item{background:var(--soft);border-radius:0;padding:16px 18px}
+  .p-item .d{font-size:12.5px;color:rgba(17,17,17,.55)}
+  .p-item .f{font-weight:700;margin-top:4px}
+  .p-item .dls{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
+  .p-item .dls a{background:var(--ink);color:#fff;border-radius:0;padding:6px 14px;font-size:12.5px;font-weight:700;transition:.2s}
+  .p-item .dls a:hover{background:var(--accent)}
+  .none{color:rgba(17,17,17,.55);font-size:15px;margin-top:20px}
+  .logout{margin-top:26px;width:100%;background:transparent;border:1.5px solid var(--ink);border-radius:0;padding:12px;font-size:14.5px;font-weight:700;transition:.2s}
+  .logout:hover{border-color:var(--accent);color:var(--accent)}
+</style>
+</head>
+<body>
+
+<header><div id="site-header"></div></header>
+
+<div class="wrap">
+  <!-- התחברות / הרשמה -->
+  <div class="card" id="authCard">
+    <h1 id="authTitle">ברוכים הבאים 👋</h1>
+    <div class="sub">חשבון אחד — כל הפונטים שקניתם, לתמיד.</div>
+
+    <div class="tabs">
+      <button id="tabLogin" class="on">התחברות</button>
+      <button id="tabRegister">הרשמה</button>
+    </div>
+
+    <div class="field" id="nameField" style="display:none">
+      <label for="aName">שם מלא</label>
+      <input id="aName" type="text" placeholder="ישראל ישראלי">
+    </div>
+    <div class="field">
+      <label for="aEmail">אימייל</label>
+      <input id="aEmail" type="email" placeholder="you@example.com">
+    </div>
+    <div class="field">
+      <label for="aPass">סיסמה</label>
+      <input id="aPass" type="password" placeholder="••••••••">
+    </div>
+
+    <div class="gift" id="giftNote" style="display:none">🎁 נרשמים ומקבלים מיד את 9 המשפחות החינמיות שלנו למייל</div>
+
+    <button class="btn" id="authBtn">התחברו ←</button>
+    <div class="note">דמו — באתר האמיתי החשבון מאובטח ומגובה</div>
+  </div>
+
+  <!-- איזור אישי -->
+  <div class="card account" id="accountCard">
+    <h1>האיזור האישי</h1>
+    <div class="hello" id="hello"></div>
+    <div class="purchases" id="purchases"></div>
+    <button class="logout" id="logoutBtn">התנתקות</button>
+  </div>
+</div>
+
+<div id="site-footer"></div>
+
+<script src="shared.js"></script>
+<script>
+renderHeader(); renderFooter();
+
+let mode = 'login';
+const tabL = document.getElementById('tabLogin'), tabR = document.getElementById('tabRegister');
+const nameField = document.getElementById('nameField');
+const giftNote = document.getElementById('giftNote');
+const authBtn = document.getElementById('authBtn');
+const authTitle = document.getElementById('authTitle');
+
+function setMode(m){
+  mode = m;
+  tabL.classList.toggle('on', m==='login');
+  tabR.classList.toggle('on', m==='register');
+  nameField.style.display = m==='register' ? '' : 'none';
+  giftNote.style.display = m==='register' ? '' : 'none';
+  authBtn.textContent = m==='register' ? 'הירשמו — זה בחינם ←' : 'התחברו ←';
+  authTitle.textContent = m==='register' ? 'בואו נכיר 🎉' : 'ברוכים הבאים 👋';
+}
+tabL.onclick = () => setMode('login');
+tabR.onclick = () => setMode('register');
+
+authBtn.onclick = () => {
+  const email = document.getElementById('aEmail').value.trim();
+  const pass = document.getElementById('aPass').value;
+  const name = document.getElementById('aName').value.trim();
+  if (!email.includes('@') || !pass) { toast('חסר מייל תקין או סיסמה'); return; }
+  if (mode === 'register' && !name) { toast('איך קוראים לכם? חסר שם'); return; }
+  User.set({ name: name || email.split('@')[0], email });
+  toast(mode === 'register' ? 'נרשמתם! הפונטים החינמיים בדרך למייל 🎁' : 'התחברתם ✓');
+  showAccount();
+  renderHeader();
+};
+
+function showAccount(){
+  const u = User.get();
+  if (!u) return;
+  document.getElementById('authCard').style.display = 'none';
+  document.getElementById('accountCard').style.display = 'block';
+  document.getElementById('hello').textContent = `היי ${u.name} · ${u.email}`;
+  const ps = User.purchases();
+  const wrap = document.getElementById('purchases');
+  if (!ps.length) {
+    wrap.innerHTML = '<div class="none">עוד אין רכישות — <a href="catalog.html" style="text-decoration:underline">הקטלוג מחכה</a>. הפונטים שתקנו יופיעו כאן להורדה חוזרת, לתמיד.</div>';
+  } else {
+    wrap.innerHTML = ps.map(p => `
+      <div class="p-item">
+        <div class="d">${p.date} · ₪${p.total}</div>
+        <div class="f">${p.slugs.map(s => (fontBySlug(s)||{}).he || s).join(' · ')}</div>
+        <div class="dls">${p.slugs.map(s => `<a href="fonts/${s}.woff2" download>${(fontBySlug(s)||{}).he || s} ↓</a>`).join('')}</div>
+      </div>`).join('');
+  }
+}
+
+document.getElementById('logoutBtn').onclick = () => {
+  User.logout();
+  toast('התנתקתם. להתראות 👋');
+  document.getElementById('accountCard').style.display = 'none';
+  document.getElementById('authCard').style.display = 'block';
+  renderHeader();
+};
+
+/* אם כבר מחוברים — ישר לאיזור האישי */
+if (User.get()) showAccount();
+</script>
+</body>
+</html>

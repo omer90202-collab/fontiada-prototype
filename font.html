@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>דף פונט — פונטיאדה</title>
+<!--
+  פונטיאדה — דף פונט (פרוטוטייפ 0.1)
+  פיצ'רים: טסטר ענק עריך + סליידר גודל + טקסטים מוכנים, קופסת רכישה
+  עם "מה מקבלים", מפל גדלים, גריד כל התווים (69 גליפים), פונטים דומים,
+  פס רכישה דביק שמופיע בגלילה. הפונט נטען מ-?f=slug.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#ffffff; --ink:#111111; --accent:#e8320f; --cobalt:#1439c4;
+    --soft:#f4f2ee; --line:rgba(17,17,17,.15); --card:#e8320f;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--ink);font-family:'Heebo',sans-serif;overflow-x:hidden;line-height:1.5}
+  ::selection{background:var(--accent);color:#fff}
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit;cursor:pointer}
+
+  header{position:fixed;inset-inline:0;top:0;z-index:90;background:rgba(255,255,255,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--ink)}
+  .nav{display:flex;justify-content:space-between;align-items:center;padding:18px 4vw}
+  .nav .logo img{height:34px;width:auto}
+  .nav-links{display:flex;gap:26px;font-size:15px;font-weight:500;align-items:center}
+  .nav-cta{background:var(--ink);color:#fff;border:none;border-radius:0;padding:10px 22px;font-size:15px;font-weight:700;transition:.25s}
+  .nav-cta:hover{background:var(--accent)}
+
+  /* ── הירו הפונט ── */
+  .f-hero{padding:140px 5vw 40px;max-width:1400px;margin-inline:auto}
+  .crumbs{font-size:14px;color:rgba(22,19,15,.5);margin-bottom:14px}
+  .crumbs a:hover{color:var(--accent)}
+  .f-title-row{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap}
+  .f-title-row h1{font-size:clamp(40px,6vw,84px);font-weight:900;line-height:1}
+  .f-title-row .tagline{font-size:16px;color:rgba(22,19,15,.55)}
+
+  /* טסטר — בלוק הצבע של הפונט, טקסט לבן */
+  .tester{margin-top:30px;background:var(--card);color:#fff;border-radius:0;padding:44px 4vw 30px;position:relative;overflow:hidden}
+  .tester .big{font-size:var(--t-size,96px);line-height:1.15;outline:none;word-break:break-word;min-height:1.3em;caret-color:#fff}
+  .tester-controls{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:26px}
+  .size-wrap{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:700}
+  input[type=range]{accent-color:#fff;width:160px}
+  .presets{display:flex;gap:8px;flex-wrap:wrap}
+  .preset{border:1.5px solid rgba(255,255,255,.55);color:#fff;background:transparent;border-radius:0;padding:8px 16px;font-size:13.5px;font-weight:500;transition:.2s}
+  .preset:hover{background:#fff;color:var(--ink);border-color:#fff}
+
+  /* ── שכבת רכישה ── */
+  .buy-layout{display:grid;grid-template-columns:1fr minmax(300px,380px);gap:30px;max-width:1400px;margin:40px auto 0;padding:0 5vw;align-items:start}
+  /* min-width:0 חיוני — בלעדיו שורות ה-nowrap של המפל מנפחות את העמודה וכל העמוד גולש שמאלה ב-RTL */
+  .buy-layout > *{min-width:0}
+  @media (max-width:900px){ .buy-layout{grid-template-columns:1fr} }
+
+  .buy-box{position:sticky;top:100px;background:#fff;border:1.5px solid var(--ink);border-radius:0;padding:32px 28px}
+  .buy-box .price{font-size:56px;font-weight:900;line-height:1}
+  .buy-box .price small{font-size:16px;font-weight:500;color:rgba(17,17,17,.55)}
+  .buy-box .assure{margin-top:8px;font-size:15px;font-weight:700;color:var(--accent)}
+  .btn-buy{width:100%;margin-top:22px;background:var(--ink);color:#fff;font-size:19px;font-weight:900;border:none;border-radius:0;padding:18px;transition:.25s}
+  .btn-buy:hover{background:var(--accent)}
+  .buy-list{margin-top:24px;display:flex;flex-direction:column;gap:12px;font-size:14.5px}
+  .buy-list div{display:flex;gap:10px;align-items:baseline}
+  .buy-list .ok{color:var(--accent);font-weight:900}
+  .buy-note{margin-top:20px;padding-top:16px;border-top:1px solid var(--line);font-size:13px;color:rgba(22,19,15,.5);line-height:1.6}
+
+  /* מפל גדלים */
+  .waterfall{display:flex;flex-direction:column;gap:6px;overflow:hidden}
+  .waterfall .row{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.35}
+  .sect{margin-top:70px}
+  .sect h2{font-size:clamp(26px,3.4vw,44px);font-weight:900;margin-bottom:24px}
+  .sect h2 span{color:var(--accent)}
+
+  /* ── גריד תווים בסגנון דינמו (Camera): תאים לבנים מעוגלים על רקע
+     אפרפר-קריר, ובריחוף — לוח שחור גדול שקופץ פנימה עם סיבוב קפיצי
+     ומציג את התו ענק. רפרנס: abcdinamo.com/typefaces/camera ── */
+  .charwrap{background:#eef1f2;padding:38px 34px 44px;position:relative}
+  .chgroup{margin-bottom:38px}
+  .chgroup:last-child{margin-bottom:0}
+  .chgroup h3{text-align:center;font-size:15.5px;font-weight:500;color:rgba(17,17,17,.75);margin-bottom:18px}
+  .chars{display:flex;flex-wrap:wrap;justify-content:center;gap:9px}
+  .chars .ch{width:84px;aspect-ratio:1;display:grid;place-items:center;background:#fff;border-radius:14px;font-size:38px;cursor:default;box-shadow:0 1px 2px rgba(17,17,17,.05);position:relative;will-change:transform}
+  /* התא המרוחף: מתהפך לשחור-לבן, קופץ מעל השכנים ומסתובב פנימה (GSAP) */
+  .chars .ch.hot{background:#111;color:#fff;z-index:40;box-shadow:0 24px 55px rgba(17,17,17,.35)}
+  html.static .chars .ch:hover{background:#111;color:#fff}
+  @media (max-width:760px){ .chars .ch{width:64px;font-size:28px} }
+
+  /* סיפור */
+  .story{background:var(--ink);color:#fff;border-radius:0;padding:50px 5vw;max-width:1400px;margin:80px auto 0}
+  .story p{font-size:clamp(19px,2.2vw,26px);line-height:1.65;max-width:900px}
+  .story .credit{margin-top:18px;font-size:14.5px;color:rgba(255,255,255,.6)}
+
+  /* דומים */
+  .similar{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+  .sim-card{border-radius:0;padding:26px;display:flex;flex-direction:column;gap:14px;transition:.3s;min-height:200px;justify-content:space-between;color:#fff}
+  .sim-card:hover{transform:translateY(-8px);box-shadow:0 20px 44px rgba(17,17,17,.3)}
+  .sim-card .s{font-size:52px;line-height:1.1}
+  .sim-card .n{font-weight:900;display:flex;justify-content:space-between;align-items:center}
+
+  .page-pad{max-width:1400px;margin-inline:auto;padding:0 5vw 110px}
+
+  /* פס רכישה דביק */
+  .sticky-buy{position:fixed;bottom:0;inset-inline:0;background:rgba(17,17,17,.97);color:#fff;backdrop-filter:blur(10px);display:flex;justify-content:space-between;align-items:center;padding:14px 5vw;z-index:80;transform:translateY(110%);transition:.4s cubic-bezier(.2,.8,.2,1)}
+  .sticky-buy.show{transform:translateY(0)}
+  .sticky-buy .sn{font-weight:900;font-size:18px}
+  .sticky-buy .sp{color:rgba(255,255,255,.65);font-size:14px;margin-inline-start:12px}
+  .sticky-buy button{background:var(--accent);color:#fff;border:none;border-radius:0;padding:12px 28px;font-size:16px;font-weight:700;transition:.2s}
+  .sticky-buy button:hover{transform:translateY(-2px)}
+
+  footer{display:flex;justify-content:space-between;align-items:center;padding:26px 4vw;font-size:13.5px;color:rgba(22,19,15,.5);border-top:1px solid var(--line);flex-wrap:wrap;gap:8px}
+  footer .flinks{display:flex;gap:18px}
+  .nav-user{font-weight:700;font-size:15px}
+  .btn-add2{width:100%;margin-top:10px;background:transparent;color:var(--ink);font-size:16px;font-weight:700;border:1.5px solid var(--ink);border-radius:0;padding:14px;transition:.25s}
+  .btn-add2:hover{background:var(--ink);color:#fff}
+  @media (max-width:760px){ .nav-links{display:none} }
+</style>
+</head>
+<body>
+
+<header><div id="site-header"></div></header>
+
+<div class="f-hero">
+  <div class="crumbs"><a href="catalog.html">הקטלוג</a> ← <span id="crumbName"></span></div>
+  <div class="f-title-row">
+    <h1 id="fName"></h1>
+    <div class="tagline" id="fTag"></div>
+  </div>
+
+  <div class="tester" id="testerBox">
+    <div class="big" id="testerText" contenteditable="true" spellcheck="false" aria-label="טסטר — הקלידו טקסט">דג סקרן שט בים מאוכזב ולפתע מצא חברה</div>
+    <div class="tester-controls">
+      <div class="size-wrap">גודל <input type="range" id="tSize" min="36" max="180" value="96"></div>
+      <div class="presets" id="presets"></div>
+    </div>
+  </div>
+</div>
+
+<div class="buy-layout">
+  <div>
+    <!-- מפל גדלים -->
+    <div class="sect" style="margin-top:0">
+      <h2>מפל <span>גדלים</span></h2>
+      <div class="waterfall" id="waterfall"></div>
+    </div>
+
+    <!-- כל התווים — גריד בסגנון דינמו -->
+    <div class="sect">
+      <h2>כל <span>69 התווים</span></h2>
+      <div class="charwrap" id="charWrap"></div>
+    </div>
+  </div>
+
+  <!-- קופסת רכישה -->
+  <aside class="buy-box" id="buyBox">
+    <div class="price">₪<span id="fPrice"></span> <small>כולל מע״מ</small></div>
+    <div class="assure">כל המשקלים · כל השימושים · לתמיד</div>
+    <button class="btn-buy" id="buyBtn">קנו עכשיו ←</button>
+    <button class="btn-add2" id="addBtn">הוסיפו לעגלה 🛒</button>
+    <div class="buy-list">
+      <div><span class="ok">✓</span> קבצי TTF + OTF + WOFF2</div>
+      <div><span class="ok">✓</span> רישיון אוניברסלי — דפוס, ווב, אפליקציות, לוגו</div>
+      <div><span class="ok">✓</span> התקנה על כל המחשבים שלכם</div>
+      <div><span class="ok">✓</span> הורדה מיידית + הורדה חוזרת לתמיד</div>
+      <div><span class="ok">✓</span> תשלום חד-פעמי. בלי מנויים</div>
+    </div>
+    <div class="buy-note">הפונט נמסר בהורדה מיידית ולכן אין ביטול עסקה — אבל אם משהו טכני לא עובד, אנחנו מתקנים או מחזירים. <a href="#" style="text-decoration:underline" onclick="toast('עמוד הרישיון — באתר האמיתי');return false">לרישיון המלא</a></div>
+  </aside>
+</div>
+
+<div class="page-pad">
+  <!-- סיפור -->
+  <div class="story" data-reveal>
+    <p id="storyTxt"></p>
+    <div class="credit">עיצוב: נהוראי · פונטיאדה 2026</div>
+  </div>
+
+  <!-- דומים -->
+  <div class="sect">
+    <h2>אולי גם <span>אלה</span></h2>
+    <div class="similar" id="similar"></div>
+  </div>
+</div>
+
+<!-- פס רכישה דביק -->
+<div class="sticky-buy" id="stickyBuy">
+  <div><span class="sn" id="sbName"></span><span class="sp">₪<span id="sbPrice"></span> · כולל מע״מ · רישיון לתמיד</span></div>
+  <button onclick="buyClick()">קנו עכשיו ←</button>
+</div>
+
+<div id="site-footer"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.3.4/dist/lenis.min.js"></script>
+<script src="shared.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+const STATIC = matchMedia('(prefers-reduced-motion: reduce)').matches
+            || new URLSearchParams(location.search).has('static');
+if (!STATIC) {
+  const lenis = new Lenis({ lerp:.09 });
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add(t => lenis.raf(t*1000));
+  gsap.ticker.lagSmoothing(0);
+}
+
+/* ── איזה פונט? ── */
+const slug = new URLSearchParams(location.search).get('f') || 'neohari';
+const font = FONTS.find(f => f.slug === slug) || FONTS.find(f => f.slug === 'neohari');
+const fi = FONTS.indexOf(font);
+const famCss = `'${font.slug}', 'Heebo', sans-serif`;
+
+document.title = font.he + ' — פונטיאדה';
+document.documentElement.style.setProperty('--card', cardColor(fi));
+document.getElementById('crumbName').textContent = font.he;
+document.getElementById('fName').textContent = font.he;
+document.getElementById('fName').style.fontFamily = famCss;
+document.getElementById('fTag').textContent = font.tag + (font.tier === 59 ? ' · פרימיום' : '');
+document.getElementById('fPrice').textContent = font.tier;
+document.getElementById('sbName').textContent = font.he;
+document.getElementById('sbPrice').textContent = font.tier;
+
+/* ── טסטר ── */
+const testerText = document.getElementById('testerText');
+testerText.style.fontFamily = famCss;
+document.getElementById('tSize').addEventListener('input', e => {
+  document.documentElement.style.setProperty('--t-size', e.target.value + 'px');
+});
+const PRESETS = [
+  'דג סקרן שט בים מאוכזב ולפתע מצא חברה',
+  'שלום עולם! 123',
+  'חתונה של דנה ויובל ♥ 24.8.2026',
+  'מבצע! 50% הנחה עד חצות',
+  'אבגדהוזחטיכלמנסעפצקרשת',
+];
+const presetsWrap = document.getElementById('presets');
+PRESETS.forEach(t => {
+  const b = document.createElement('button');
+  b.className = 'preset'; b.textContent = t.length > 22 ? t.slice(0, 22) + '…' : t;
+  b.onclick = () => { testerText.textContent = t; };
+  presetsWrap.appendChild(b);
+});
+
+/* ── מפל גדלים ── */
+const wf = document.getElementById('waterfall');
+[64, 48, 36, 28, 22, 17].forEach(sz => {
+  const d = document.createElement('div');
+  d.className = 'row';
+  d.style.cssText = `font-size:${sz}px;font-family:${famCss}`;
+  d.textContent = 'כל אדם זכאי לחירות המחשבה, המצפון והדת';
+  wf.appendChild(d);
+});
+
+/* ── גריד תווים בסגנון דינמו: קבוצות + לוח שחור צף ── */
+const CHAR_GROUPS = [
+  { title:'אותיות',        chars:[...'אבגדהוזחטיכלמנסעפצקרשת'], lbl:'' },
+  { title:'אותיות סופיות', chars:[...'ךםןףץ'],                  lbl:'אות סופית' },
+  { title:'ספרות',         chars:[...'0123456789'],             lbl:'' },
+  { title:'פיסוק וסימנים', chars:[...'!@#$%^₪*()-=+[]{},״:?.<>'], lbl:'' },
+];
+const charWrap = document.getElementById('charWrap');
+CHAR_GROUPS.forEach(g => {
+  const grp = document.createElement('div');
+  grp.className = 'chgroup';
+  grp.innerHTML = `<h3>${g.title}</h3>`;
+  const grid = document.createElement('div');
+  grid.className = 'chars';
+  g.chars.forEach(ch => {
+    const d = document.createElement('div');
+    d.className = 'ch';
+    d.style.fontFamily = famCss;
+    d.textContent = ch;
+    d.dataset.lbl = g.lbl;
+    grid.appendChild(d);
+  });
+  grp.appendChild(grid);
+  charWrap.appendChild(grp);
+});
+
+/* אנימציית הריחוף — התא עצמו: מתהפך לשחור-לבן, מוגדל פי ~3 מעל
+   השכנים, ונכנס עם סיבוב קפיצי (הרפרנס: דינמו Camera) */
+if (!STATIC && matchMedia('(hover:hover)').matches) {
+  const HOT_SCALE = 2.25;   /* הוקטן ב-25% לבקשת עומר */
+  charWrap.querySelectorAll('.ch').forEach(cell => {
+    cell.addEventListener('mouseenter', () => {
+      gsap.killTweensOf(cell);
+      cell.classList.add('hot');
+      /* סיבוב מלא של הריבוע תוך כדי הגדילה */
+      gsap.fromTo(cell,
+        { scale:1, rotation:-360 },
+        { scale:HOT_SCALE, rotation:0, duration:.55, ease:'back.out(1.4)' });
+    });
+    cell.addEventListener('mouseleave', () => {
+      gsap.killTweensOf(cell);
+      gsap.to(cell, { scale:1, rotation:6, duration:.22, ease:'power2.in',
+        onComplete:() => {
+          cell.classList.remove('hot');
+          gsap.to(cell, { rotation:0, duration:.18, ease:'power2.out' });
+        } });
+    });
+  });
+}
+
+/* ── סיפור ── */
+const STORIES = {
+  neohari: 'נהוראי הוא הפונט שקיבל את השם של מי שעיצב אותו — וזה מחייב. כל אות נבנתה, נבדקה ונבנתה מחדש עד שהייתה מושלמת. פונט תצוגה עם אופי, שיודע להיות רציני כשצריך ומחויך כשאפשר.',
+  default: `${font.he} הוא ${font.tag} — פונט שנולד בסטודיו של פונטיאדה ועבר את כל 69 תחנות הבקרה שלנו לפני שהגיע לכאן. כל אות, כל ספרה, כל סימן — במקום.`,
+};
+document.getElementById('storyTxt').textContent = STORIES[slug] || STORIES.default;
+document.getElementById('storyTxt').style.fontFamily = famCss;
+
+/* ── דומים ── */
+const sim = document.getElementById('similar');
+const others = FONTS.filter(f => f.slug !== slug);
+/* בחירה יציבה: שלושה שכנים בקטלוג */
+[others[fi % others.length], others[(fi + 7) % others.length], others[(fi + 14) % others.length]].forEach((f, i) => {
+  const a = document.createElement('a');
+  a.className = 'sim-card';
+  a.href = 'font.html?f=' + f.slug;
+  a.style.background = cardColor(FONTS.indexOf(f));
+  a.innerHTML = `<div class="s" style="font-family:'${f.slug}'">${f.he}</div>
+                 <div class="n"><span>${f.he}</span><span>₪${f.tier}</span></div>`;
+  sim.appendChild(a);
+});
+
+/* ── רכישה ── */
+renderHeader(); renderFooter();
+function buyClick(){ Cart.add(font.slug); location.href = 'cart.html'; }
+document.getElementById('buyBtn').onclick = buyClick;
+document.getElementById('addBtn').onclick = () => Cart.add(font.slug);
+
+if (!STATIC) {
+  /* ── פס דביק: מופיע כשקופסת הרכישה יוצאת מהמסך ── */
+  ScrollTrigger.create({
+    trigger:'#buyBox', start:'bottom top',
+    onToggle:s => document.getElementById('stickyBuy').classList.toggle('show', s.isActive),
+  });
+
+  /* ── דף מוצר: אפס אנימציות על תוכן. הלקוח בא לראות פונט — הוא רואה פונט. ── */
+  window.addEventListener('load', () => ScrollTrigger.refresh());
+  document.fonts.ready.then(() => ScrollTrigger.refresh());
+}
+</script>
+</body>
+</html>
