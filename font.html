@@ -80,11 +80,34 @@
   .chgroup:last-child{margin-bottom:0}
   .chgroup h3{text-align:center;font-size:15.5px;font-weight:500;color:rgba(17,17,17,.75);margin-bottom:18px}
   .chars{display:flex;flex-wrap:wrap;justify-content:center;gap:9px}
-  .chars .ch{width:84px;aspect-ratio:1;display:grid;place-items:center;background:#fff;border-radius:14px;font-size:38px;cursor:default;box-shadow:0 1px 2px rgba(17,17,17,.05);position:relative;will-change:transform}
-  /* התא המרוחף: מתהפך לשחור-לבן, קופץ מעל השכנים ומסתובב פנימה (GSAP) */
-  .chars .ch.hot{background:#111;color:#fff;z-index:40;box-shadow:0 24px 55px rgba(17,17,17,.35)}
-  html.static .chars .ch:hover{background:#111;color:#fff}
-  @media (max-width:760px){ .chars .ch{width:64px;font-size:28px} }
+  /* התא הוא רק מחזיק-מקום בפריסה; החלק הנראה הוא .g שגדל מעליו
+     בלי להזיז שכנים. */
+  .chars .ch{width:84px;aspect-ratio:1;position:relative;cursor:default}
+  /* קריטי לחדות: ההגדלה נעשית ב-font-size אמיתי ולא ב-transform:scale —
+     סקיילינג מותח את הפיקסלים שכבר צוירו ומטשטש את האות. */
+  .chars .ch .g{
+    position:absolute;top:50%;inset-inline-start:50%;
+    width:84px;height:84px;display:grid;place-items:center;
+    background:#fff;border-radius:14px;font-size:38px;color:var(--ink);
+    box-shadow:0 1px 2px rgba(17,17,17,.05);
+    transform:translate(50%,-50%) rotate(0deg);
+    transition:width .55s cubic-bezier(.3,1.35,.5,1),height .55s cubic-bezier(.3,1.35,.5,1),
+               font-size .55s cubic-bezier(.3,1.35,.5,1),border-radius .55s cubic-bezier(.3,1.35,.5,1),
+               transform .55s cubic-bezier(.3,1.35,.5,1),
+               background-color .3s,color .3s,box-shadow .3s;
+  }
+  .chars .ch:hover{z-index:40}
+  .chars .ch:hover .g{
+    width:284px;height:284px;font-size:128px;border-radius:46px;
+    background:#111;color:#fff;
+    transform:translate(50%,-50%) rotate(360deg);
+    box-shadow:0 26px 60px rgba(17,17,17,.38);
+  }
+  @media (max-width:760px){
+    .chars .ch{width:64px}
+    .chars .ch .g{width:64px;height:64px;font-size:28px}
+    .chars .ch:hover .g{width:190px;height:190px;font-size:86px;border-radius:34px}
+  }
 
   /* סיפור */
   .story{background:var(--ink);color:#fff;border-radius:0;padding:50px 5vw;max-width:1400px;margin:80px auto 0}
@@ -269,38 +292,21 @@ CHAR_GROUPS.forEach(g => {
   g.chars.forEach(ch => {
     const d = document.createElement('div');
     d.className = 'ch';
-    d.style.fontFamily = famCss;
-    d.textContent = ch;
     d.dataset.lbl = g.lbl;
+    const inner = document.createElement('span');
+    inner.className = 'g';
+    inner.style.fontFamily = famCss;
+    inner.textContent = ch;
+    d.appendChild(inner);
     grid.appendChild(d);
   });
   grp.appendChild(grid);
   charWrap.appendChild(grp);
 });
 
-/* אנימציית הריחוף — התא עצמו: מתהפך לשחור-לבן, מוגדל פי ~3 מעל
-   השכנים, ונכנס עם סיבוב קפיצי (הרפרנס: דינמו Camera) */
-if (!STATIC && matchMedia('(hover:hover)').matches) {
-  const HOT_SCALE = 2.25;   /* הוקטן ב-25% לבקשת עומר */
-  charWrap.querySelectorAll('.ch').forEach(cell => {
-    cell.addEventListener('mouseenter', () => {
-      gsap.killTweensOf(cell);
-      cell.classList.add('hot');
-      /* סיבוב מלא של הריבוע תוך כדי הגדילה */
-      gsap.fromTo(cell,
-        { scale:1, rotation:-360 },
-        { scale:HOT_SCALE, rotation:0, duration:.55, ease:'back.out(1.4)' });
-    });
-    cell.addEventListener('mouseleave', () => {
-      gsap.killTweensOf(cell);
-      gsap.to(cell, { scale:1, rotation:6, duration:.22, ease:'power2.in',
-        onComplete:() => {
-          cell.classList.remove('hot');
-          gsap.to(cell, { rotation:0, duration:.18, ease:'power2.out' });
-        } });
-    });
-  });
-}
+/* אנימציית הריחוף על גריד התווים מוגדרת כולה ב-CSS (ראו .chars .ch .g):
+   הגדלה ב-font-size אמיתי לחדות מלאה + סיבוב מלא, בלי JS ובלי GSAP —
+   כך היא לא יכולה להיתקע גם אם הדפדפן מקפיא פריימים. */
 
 /* ── סיפור ── */
 const STORIES = {
