@@ -97,8 +97,10 @@
                background-color .3s,color .3s,box-shadow .3s;
   }
   .chars .ch:hover{z-index:40}
+  /* הריבוע נשאר בגודל שאושר (190px); רק האות בתוכו גדלה ב-50%
+     (85px → 128px) — וההגדלה ב-font-size אמיתי, לחדות מלאה. */
   .chars .ch:hover .g{
-    width:284px;height:284px;font-size:128px;border-radius:46px;
+    width:190px;height:190px;font-size:128px;border-radius:34px;
     background:#111;color:#fff;
     transform:translate(50%,-50%) rotate(360deg);
     box-shadow:0 26px 60px rgba(17,17,17,.38);
@@ -106,7 +108,7 @@
   @media (max-width:760px){
     .chars .ch{width:64px}
     .chars .ch .g{width:64px;height:64px;font-size:28px}
-    .chars .ch:hover .g{width:190px;height:190px;font-size:86px;border-radius:34px}
+    .chars .ch:hover .g{width:150px;height:150px;font-size:100px;border-radius:28px}
   }
 
   /* סיפור */
