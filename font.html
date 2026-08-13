@@ -85,12 +85,14 @@
   .chars .ch{width:84px;aspect-ratio:1;position:relative;cursor:default}
   /* קריטי לחדות: ההגדלה נעשית ב-font-size אמיתי ולא ב-transform:scale —
      סקיילינג מותח את הפיקסלים שכבר צוירו ומטשטש את האות. */
+  /* מרכוז פיזי (left + translate שלילי) ולא לוגי — כדי שיעבוד גם
+     בקבוצות שמוגדרות LTR, כמו שורת הספרות. */
   .chars .ch .g{
-    position:absolute;top:50%;inset-inline-start:50%;
+    position:absolute;top:50%;left:50%;
     width:84px;height:84px;display:grid;place-items:center;
     background:#fff;border-radius:14px;font-size:38px;color:var(--ink);
     box-shadow:0 1px 2px rgba(17,17,17,.05);
-    transform:translate(50%,-50%) rotate(0deg);
+    transform:translate(-50%,-50%) rotate(0deg);
     transition:width .55s cubic-bezier(.3,1.35,.5,1),height .55s cubic-bezier(.3,1.35,.5,1),
                font-size .55s cubic-bezier(.3,1.35,.5,1),border-radius .55s cubic-bezier(.3,1.35,.5,1),
                transform .55s cubic-bezier(.3,1.35,.5,1),
@@ -102,9 +104,11 @@
   .chars .ch:hover .g{
     width:190px;height:190px;font-size:128px;border-radius:34px;
     background:#111;color:#fff;
-    transform:translate(50%,-50%) rotate(360deg);
+    transform:translate(-50%,-50%) rotate(360deg);
     box-shadow:0 26px 60px rgba(17,17,17,.38);
   }
+  /* ספרות נקראות משמאל לימין גם בפונט עברי */
+  .chars.ltr{direction:ltr}
   @media (max-width:760px){
     .chars .ch{width:64px}
     .chars .ch .g{width:64px;height:64px;font-size:28px}
@@ -281,7 +285,7 @@ const wf = document.getElementById('waterfall');
 const CHAR_GROUPS = [
   { title:'אותיות',        chars:[...'אבגדהוזחטיכלמנסעפצקרשת'], lbl:'' },
   { title:'אותיות סופיות', chars:[...'ךםןףץ'],                  lbl:'אות סופית' },
-  { title:'ספרות',         chars:[...'0123456789'],             lbl:'' },
+  { title:'ספרות',         chars:[...'0123456789'],             lbl:'', ltr:true },
   { title:'פיסוק וסימנים', chars:[...'!@#$%^₪*()-=+[]{},״:?.<>'], lbl:'' },
 ];
 const charWrap = document.getElementById('charWrap');
@@ -290,7 +294,7 @@ CHAR_GROUPS.forEach(g => {
   grp.className = 'chgroup';
   grp.innerHTML = `<h3>${g.title}</h3>`;
   const grid = document.createElement('div');
-  grid.className = 'chars';
+  grid.className = 'chars' + (g.ltr ? ' ltr' : '');
   g.chars.forEach(ch => {
     const d = document.createElement('div');
     d.className = 'ch';
