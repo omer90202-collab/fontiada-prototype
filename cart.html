@@ -33,13 +33,43 @@
   footer{display:flex;justify-content:space-between;align-items:center;padding:26px 4vw;font-size:13.5px;color:rgba(17,17,17,.55);border-top:1px solid var(--line);flex-wrap:wrap;gap:8px}
   footer .flinks{display:flex;gap:18px}
 
-  .wrap{max-width:1200px;margin-inline:auto;padding:140px 5vw 90px}
+  .wrap{max-width:1560px;margin-inline:auto;padding:140px 4vw 90px}
   h1{font-size:clamp(38px,5.5vw,72px);font-weight:900;line-height:1.05}
   h1 em{font-style:normal;color:var(--accent)}
   .sub{margin-top:8px;color:rgba(17,17,17,.55);font-size:16px}
 
-  .cart-layout{display:grid;grid-template-columns:1fr minmax(300px,380px);gap:28px;margin-top:36px;align-items:start}
+  /* פריסה: עגלה חזותית משמאל · פריטים+סיכום מימין (RTL) */
+  /* סדר העמודות ב-RTL: ימין = פריטים · אמצע = סיכום · שמאל = העגלה החזותית */
+  .cart-layout{display:grid;grid-template-columns:1fr minmax(290px,340px) minmax(300px,390px);gap:22px;margin-top:36px;align-items:start}
+  .cart-layout > *{min-width:0}
+  @media (max-width:1250px){ .cart-layout{grid-template-columns:1fr minmax(300px,360px)} .cart-visual{grid-column:1/-1;order:-1} }
   @media (max-width:900px){ .cart-layout{grid-template-columns:1fr} }
+
+  /* ═══ העגלה החזותית — הפונטים נופלים לתוכה ═══ */
+  .cart-visual{order:3;position:sticky;top:100px;background:var(--soft);border:1.5px solid var(--ink);padding:22px 22px 26px;overflow:hidden}
+  .cv-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+  .cv-head .t{font-weight:900;font-size:17px}
+  .cv-head .c{font-size:13px;color:rgba(17,17,17,.5)}
+  /* אזור הנפילה */
+  .cv-stage{position:relative;height:340px;overflow:hidden}
+  .cv-stage.empty::after{content:'העגלה ריקה';position:absolute;inset:0;display:grid;place-items:center;font-size:15px;color:rgba(17,17,17,.35)}
+  /* ה"עגלה" עצמה — מיכל בקו תחתון */
+  .cv-basket{position:absolute;inset-inline:6%;bottom:0;height:118px;border:2px solid var(--ink);border-top:none;background:rgba(255,255,255,.5)}
+  .cv-basket::before{content:'';position:absolute;top:-2px;inset-inline:-2px;height:2px;background:var(--ink)}
+  .cv-basket .handle{position:absolute;top:-30px;inset-inline:0;margin-inline:auto;width:56%;height:30px;border:2px solid var(--ink);border-bottom:none;border-radius:60px 60px 0 0;opacity:.35}
+  /* אריח פונט. מצב המנוחה הוא ברירת המחדל (גלוי, במקומו) —
+     האנימציה רק "מגיעה אליו" מלמעלה. לכן גם אם אנימציות מושבתות
+     או שהדפדפן מקפיא פריימים, האריח פשוט נראה במקומו. */
+  .cv-tile{position:absolute;padding:9px 16px;color:#fff;font-size:26px;line-height:1.15;white-space:nowrap;
+           transform:rotate(var(--tilt,0deg));box-shadow:0 6px 18px rgba(17,17,17,.18)}
+  @keyframes cvDrop{
+    from{ transform:translateY(var(--fromY,-320px)) rotate(calc(var(--tilt,0deg) - 25deg)); opacity:0 }
+    60% { opacity:1 }
+    to  { transform:translateY(0) rotate(var(--tilt,0deg)); opacity:1 }
+  }
+  .cv-tile.drop{ animation:cvDrop .85s cubic-bezier(.3,1.5,.45,1) backwards; animation-delay:var(--d,0s) }
+  @media (prefers-reduced-motion: reduce){ .cv-tile.drop{ animation:none } }
+  .cv-note{margin-top:14px;font-size:12.5px;color:rgba(17,17,17,.45);text-align:center}
 
   .items{display:flex;flex-direction:column;gap:14px}
   .item{display:flex;align-items:center;gap:18px;background:#fff;border:1.5px solid var(--ink);border-radius:0;padding:18px 22px}
@@ -103,6 +133,18 @@
     <div class="sub">רישיון אוניברסלי לכל פונט · כל המחירים כוללים מע״מ</div>
 
     <div class="cart-layout" id="cartLayout">
+      <!-- העגלה החזותית — משמאל -->
+      <aside class="cart-visual">
+        <div class="cv-head">
+          <span class="t">העגלה שלכם</span>
+          <span class="c" id="cvCount"></span>
+        </div>
+        <div class="cv-stage" id="cvStage">
+          <div class="cv-basket"><div class="handle"></div></div>
+        </div>
+        <div class="cv-note">כל פונט שנוסף — נופל לעגלה</div>
+      </aside>
+
       <div>
         <div class="items" id="items"></div>
         <div style="height:14px"></div>
@@ -151,15 +193,64 @@
 
 <div id="site-footer"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
 <script src="shared.js"></script>
 <script>
 renderHeader(); renderFooter();
+
+const STATIC = matchMedia('(prefers-reduced-motion: reduce)').matches
+            || new URLSearchParams(location.search).has('static');
 
 const itemsEl = document.getElementById('items');
 const upsellEl = document.getElementById('upsell');
 const srowsEl = document.getElementById('srows');
 const payBtn = document.getElementById('payBtn');
 const consent = document.getElementById('consent');
+
+/* ═══ העגלה החזותית: כל פונט נופל פנימה ונערם בתחתית ═══
+   נפילה = תנועה + ריבאונד קטן. פונט חדש מקבל השהיה קצרה כדי
+   שהעין תספיק לתפוס אותו. פריטים שכבר בפנים נשארים במקומם. */
+const cvStage = document.getElementById('cvStage');
+const cvCount = document.getElementById('cvCount');
+let cvSeen = [];   /* מה כבר "נפל" — כדי לא להנפיש מחדש בכל רינדור */
+
+function renderVisual(slugs){
+  cvCount.textContent = slugs.length ? `${slugs.length} פונטים` : '';
+  cvStage.classList.toggle('empty', slugs.length === 0);
+
+  /* הסרה: אריחים שכבר לא בעגלה */
+  [...cvStage.querySelectorAll('.cv-tile')].forEach(t => {
+    if (!slugs.includes(t.dataset.slug)) t.remove();
+  });
+
+  slugs.forEach((slug, i) => {
+    if (cvStage.querySelector(`.cv-tile[data-slug="${slug}"]`)) return;  /* כבר בפנים */
+    const f = fontBySlug(slug); if (!f) return;
+    const idx = FONTS.indexOf(f);
+    const tile = document.createElement('div');
+    tile.className = 'cv-tile';
+    tile.dataset.slug = slug;
+    tile.style.background = cardColor(idx);
+    tile.style.fontFamily = `'${slug}'`;
+    tile.textContent = f.he;
+
+    /* מיקום המנוחה — נערמים בשורות בתוך העגלה, עם סטייה קלה */
+    const row = Math.floor(i / 3), col = i % 3;
+    const restY = 274 - row * 34;
+    const restX = 11 + col * 26 + (Math.sin(i * 2.7) * 3);
+    const tilt  = (i % 2 ? 1 : -1) * (3 + (i % 3) * 2);
+
+    tile.style.left = restX + '%';
+    tile.style.top = restY + 'px';
+    tile.style.setProperty('--tilt', tilt + 'deg');
+    tile.style.setProperty('--fromY', -(restY + 90) + 'px');
+    const isNew = !cvSeen.includes(slug);
+    tile.style.setProperty('--d', (isNew ? .08 : i * .07) + 's');
+    if (!STATIC) tile.classList.add('drop');
+    cvStage.appendChild(tile);
+  });
+  cvSeen = [...slugs];
+}
 
 function render(){
   const slugs = Cart.get();
@@ -185,6 +276,8 @@ function render(){
     d.querySelector('.rm').onclick = () => { Cart.remove(slug); render(); };
     itemsEl.appendChild(d);
   });
+
+  renderVisual(slugs);
 
   /* אפסייל / חבילה */
   const p = Cart.pricing();
