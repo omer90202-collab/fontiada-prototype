@@ -28,6 +28,16 @@
   .hl{display:block;overflow:hidden}
   .hl>span{display:block;will-change:transform}
 
+  /* ═══ 0. פרילואודר (Hero Animations/5) ═══ */
+  .preloader{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;pointer-events:none}
+  .preloader__svg{position:absolute;top:0;inset-inline:0;width:100%;height:calc(100% + 300px)}
+  .preloader__svg path{fill:var(--ink)}
+  .preloader__word{position:absolute;z-index:2;display:flex;align-items:center;color:#fff;
+    font-size:clamp(42px,7.5vw,104px);line-height:1.1;white-space:nowrap;opacity:0}
+  .preloader__dot{display:block;width:.16em;height:.16em;margin-inline-end:.3em;border-radius:999px;background:var(--accent);flex:none}
+  /* אין אנימציית פרילואודר במצב מופחת-תנועה */
+  html.static .preloader{display:none}
+
   /* ── ניווט ── */
   header{position:fixed;inset-inline:0;top:0;z-index:90;transition:.3s}
   header.scrolled{background:rgba(255,255,255,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
@@ -142,6 +152,19 @@
 </style>
 </head>
 <body>
+
+<!-- ═══ 0. פרילואודר — פורט של Hero Animations/5 (Awwwards Pack).
+     במקום ברכות בשפות שונות: "פונטיאדה" מתחלף בכל 33 הפונטים שלנו,
+     ואז מסך הכיסוי נשלף למעלה עם גל אלסטי (morph של path ב-SVG).
+     בטיחות: התוכן מתחת אף פעם לא מוסתר ב-CSS, ויש טיימר חילוץ —
+     גם אם ה-JS נופל, האתר נראה. ═══ -->
+<div class="preloader" id="preloader" aria-hidden="true">
+  <p class="preloader__word" id="plWord">
+    <span class="preloader__dot"></span>
+    <span id="plText">פונטיאדה</span>
+  </p>
+  <svg class="preloader__svg" preserveAspectRatio="none"><path id="plPath"></path></svg>
+</div>
 
 <header id="siteHeader"><div id="site-header"></div></header>
 
@@ -261,13 +284,83 @@ const STATIC = matchMedia('(prefers-reduced-motion: reduce)').matches
             || new URLSearchParams(location.search).has('static');
 if (STATIC) document.documentElement.classList.add('static');
 
+/* ═══ 0. פרילואודר — פורט של Hero Animations/5 ═══
+   המכניקה מהמקור: מילה מתחלפת במרכז מסך כהה, ואז המסך נשלף ל--100vh
+   בזמן ש-path של SVG מתיישר מקשת בולטת (h+300) לקו ישר — הגל האלסטי.
+   ההתאמה שלנו: אותה מילה — "פונטיאדה" — בכל 33 הפונטים בזה אחר זה. */
+(function preloader(){
+  const el = document.getElementById('preloader');
+  if (!el) return;
+  const word = document.getElementById('plWord');
+  const txt  = document.getElementById('plText');
+  const path = document.getElementById('plPath');
+
+  const done = () => {
+    el.style.display = 'none';
+    document.body.style.overflow = '';
+    if (window.__heroIn) { window.__heroIn(); window.__heroIn = null; }
+  };
+  if (STATIC || !window.gsap) { done(); return; }
+
+  document.body.style.overflow = 'hidden';
+  /* רשת ביטחון: מה שיקרה — אחרי 7 שניות המסך יורד ממילא */
+  const bail = setTimeout(done, 7000);
+
+  const dim = { w: innerWidth, h: innerHeight };
+  const paths = () => ({
+    initial:`M0 0 L${dim.w} 0 L${dim.w} ${dim.h} Q${dim.w/2} ${dim.h+300} 0 ${dim.h} L0 0`,
+    target: `M0 0 L${dim.w} 0 L${dim.w} ${dim.h} Q${dim.w/2} ${dim.h} 0 ${dim.h} L0 0`
+  });
+  path.setAttribute('d', paths().initial);
+  addEventListener('resize', () => {
+    dim.w = innerWidth; dim.h = innerHeight;
+    path.setAttribute('d', paths().initial);
+  });
+
+  const order = FONTS.map(f => f.slug);
+  txt.style.fontFamily = `'${order[0]}', 'Heebo', sans-serif`;
+  gsap.to(word, { opacity:1, duration:.5 });
+
+  /* סבב הפונטים רץ על טיימר ולא על ה-ticker של GSAP: טיימר ממשיך לרוץ
+     גם כשהדפדפן מקפיא פריימים (טאב ברקע), אז המסך לא נתקע. */
+  const HOLD = 500, STEP = 70;
+  function run(){
+    let i = 0;
+    setTimeout(() => {
+      const iv = setInterval(() => {
+        i++;
+        if (i >= order.length) { clearInterval(iv); wipe(); return; }
+        txt.style.fontFamily = `'${order[i]}', 'Heebo', sans-serif`;
+      }, STEP);
+    }, HOLD);
+  }
+
+  function wipe(){
+    clearTimeout(bail);
+    const p = paths();
+    gsap.timeline({ defaults:{ ease:'power3.inOut' }, onComplete:done })
+      .to(word, { opacity:0, duration:.3 }, 0)
+      .to(el,   { y:'-100vh', duration:.85, delay:.2, ease:'power4.inOut' }, 0)
+      .fromTo(path, { attr:{ d:p.initial } },
+                    { attr:{ d:p.target }, duration:.7, delay:.3, ease:'power4.inOut' }, 0);
+  }
+
+  /* מחכים שהפונטים ייטענו כדי שההחלפות יראו אמיתיות — אבל לא יותר מ-1.5ש׳ */
+  const ready = Promise.all(order.map(s => document.fonts.load(`60px '${s}'`).catch(()=>{})));
+  Promise.race([ready, new Promise(r => setTimeout(r, 1500))]).then(run);
+})();
+
 if (!STATIC) {
   const lenis = new Lenis({ lerp:.09 });
   lenis.on('scroll', ScrollTrigger.update);
   gsap.ticker.add(t => lenis.raf(t*1000));
   gsap.ticker.lagSmoothing(0);
   ScrollTrigger.create({ start:80, onToggle:s => document.getElementById('siteHeader').classList.toggle('scrolled', s.isActive) });
-  gsap.from('.sc-hero .hl > span', { yPercent:112, duration:1.1, stagger:.13, ease:'power4.out', delay:.15 });
+  /* שורות הכותרת עולות מהמסכה. אם יש פרילואודר — הוא זה שיקרא לזה
+     בדיוק כשהוא נשלף, כדי שהתזמון יהיה אמיתי ולא טיימר מנוחש. */
+  window.__heroIn = () => gsap.from('.sc-hero .hl > span',
+    { yPercent:112, duration:1.1, stagger:.13, ease:'power4.out' });
+  if (!document.getElementById('preloader')) window.__heroIn();
 }
 
 function splitWords(el){
