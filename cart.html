@@ -177,7 +177,7 @@
     <div class="empty" id="emptyView" style="display:none">
       <div class="big">העגלה ריקה. הפונטים מחכים.</div>
       <p>33 פונטים עבריים, החל מ-₪39 כולל הכל.</p>
-      <button class="btn-big" onclick="location.href='catalog.html'">לקטלוג ←</button>
+      <button class="btn-big" onclick="go('catalog.html')">לקטלוג ←</button>
     </div>
   </div>
 
@@ -187,13 +187,16 @@
     <h2>זהו, הפונטים שלכם. לתמיד.</h2>
     <p>שלחנו אישור למייל. אפשר להוריד כאן עכשיו — ותמיד שוב מהאיזור האישי.<br>עכשיו לכו תעשו איתם משהו יפה.</p>
     <div class="dl-grid" id="dlGrid"></div>
-    <button class="btn-big" onclick="location.href='catalog.html'">חזרה לקטלוג ←</button>
+    <button class="btn-big" onclick="go('catalog.html')">חזרה לקטלוג ←</button>
   </div>
 </div>
 
 <div id="site-footer"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js"></script>
+<script src="https://unpkg.com/lenis@1.3.4/dist/lenis.min.js"></script>
 <script src="shared.js"></script>
 <script>
 renderHeader(); renderFooter();

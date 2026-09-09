@@ -221,6 +221,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js"></script>
 <script src="https://unpkg.com/lenis@1.3.4/dist/lenis.min.js"></script>
 <script src="shared.js"></script>
 <script>
@@ -228,10 +229,7 @@ gsap.registerPlugin(ScrollTrigger);
 const STATIC = matchMedia('(prefers-reduced-motion: reduce)').matches
             || new URLSearchParams(location.search).has('static');
 if (!STATIC) {
-  const lenis = window.lenis = new Lenis({ lerp:.09 });
-  lenis.on('scroll', ScrollTrigger.update);
-  gsap.ticker.add(t => lenis.raf(t*1000));
-  gsap.ticker.lagSmoothing(0);
+  smoothScroll();   /* Lenis דרך shared.js — כדי שאפשר יהיה לפרק אותו במעבר עמוד */
 }
 
 /* ── איזה פונט? ── */
@@ -338,8 +336,10 @@ const others = FONTS.filter(f => f.slug !== slug);
 
 /* ── רכישה ── */
 renderHeader(); renderFooter();
-function buyClick(){ Cart.add(font.slug); location.href = 'cart.html'; }
-document.getElementById('buyBtn').onclick = buyClick;
+/* גלובלי במפורש: ה-onclick ב-HTML מחפש אותו על window, והסקריפט של
+   העמוד רץ ב-scope משלו כשמגיעים לכאן דרך מעברון עמוד */
+window.buyClick = function buyClick(){ Cart.add(font.slug); go('cart.html'); };
+document.getElementById('buyBtn').onclick = window.buyClick;
 document.getElementById('addBtn').onclick = () => Cart.add(font.slug);
 
 if (!STATIC) {

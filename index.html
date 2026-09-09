@@ -204,7 +204,7 @@
     <a href="catalog.html">כל 33 הפונטים ←</a>
   </div>
   <div class="grid" id="homeGrid"></div>
-  <div class="hc-more"><button class="btn-big" onclick="location.href='catalog.html'">לקטלוג המלא ←</button></div>
+  <div class="hc-more"><button class="btn-big" onclick="go('catalog.html')">לקטלוג המלא ←</button></div>
 </section>
 
 <!-- ═══ 4. פוסטר מומלץ ═══ -->
@@ -255,7 +255,7 @@
 <section class="statement">
   <h2 data-split>בית נגיש לפונטים<span class="dot">.</span></h2>
   <p data-reveal>זה לא סלוגן, זו כל התוכנית העסקית.</p>
-  <button class="btn-big" onclick="location.href='about.html'">הסיפור שלנו ←</button>
+  <button class="btn-big" onclick="go('about.html')">הסיפור שלנו ←</button>
 </section>
 
 <!-- ═══ 7. חינמיים ═══ -->
@@ -274,6 +274,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js"></script>
 <script src="https://unpkg.com/lenis@1.3.4/dist/lenis.min.js"></script>
 <script src="shared.js"></script>
 <script>
@@ -304,7 +305,7 @@ if (STATIC) document.documentElement.classList.add('static');
      אבל לא כשחוזרים הביתה מדף אחר באתר עצמו. */
   const sameSiteVisit = document.referrer && new URL(document.referrer).origin === location.origin;
   const isReload = (performance.getEntriesByType('navigation')[0] || {}).type === 'reload';
-  if (STATIC || !window.gsap || (sameSiteVisit && !isReload)) { done(); return; }
+  if (STATIC || !window.gsap || window.__spaNav || (sameSiteVisit && !isReload)) { done(); return; }
 
   document.body.style.overflow = 'hidden';
   /* רשת ביטחון: מה שיקרה — אחרי 7 שניות המסך יורד ממילא */
@@ -355,16 +356,15 @@ if (STATIC) document.documentElement.classList.add('static');
 })();
 
 if (!STATIC) {
-  const lenis = window.lenis = new Lenis({ lerp:.09 });
-  lenis.on('scroll', ScrollTrigger.update);
-  gsap.ticker.add(t => lenis.raf(t*1000));
-  gsap.ticker.lagSmoothing(0);
+  smoothScroll();   /* Lenis דרך shared.js — כדי שאפשר יהיה לפרק אותו במעבר עמוד */
   ScrollTrigger.create({ start:80, onToggle:s => document.getElementById('siteHeader').classList.toggle('scrolled', s.isActive) });
   /* שורות הכותרת עולות מהמסכה. אם יש פרילואודר — הוא זה שיקרא לזה
      בדיוק כשהוא נשלף, כדי שהתזמון יהיה אמיתי ולא טיימר מנוחש. */
   window.__heroIn = () => gsap.from('.sc-hero .hl > span',
     { yPercent:112, duration:1.1, stagger:.13, ease:'power4.out' });
-  if (!document.getElementById('preloader')) window.__heroIn();
+  /* אם הפרילואודר כבר ירד (חזרה הביתה מדף אחר) — מריצים כאן */
+  const __pl = document.getElementById('preloader');
+  if (!__pl || __pl.style.display === 'none') window.__heroIn();
 }
 
 function splitWords(el){
@@ -416,7 +416,7 @@ const mq = document.getElementById('mqTrack');
 mq.innerHTML += mq.innerHTML;
 if (!STATIC) {
   let mqX = 0, mqSpeed = .5;
-  gsap.ticker.add(() => { mqX = (mqX + mqSpeed) % (mq.scrollWidth/2); mq.style.transform = `translateX(${mqX}px)`; });
+  addTick(() => { mqX = (mqX + mqSpeed) % (mq.scrollWidth/2); mq.style.transform = `translateX(${mqX}px)`; });
   ScrollTrigger.create({ onUpdate:s => { mqSpeed = .5 + Math.min(Math.abs(s.getVelocity())/2500, 2.5); } });
 }
 
