@@ -53,22 +53,66 @@
   footer.site-footer{display:flex;justify-content:space-between;align-items:center;padding:26px 4vw;font-size:13.5px;color:rgba(17,17,17,.55);border-top:1px solid var(--line);flex-wrap:wrap;gap:8px}
   footer.site-footer .flinks{display:flex;gap:18px}
 
-  /* ═══ 1. הירו + טסטר ═══ */
-  .sc-hero{min-height:92vh;display:flex;flex-direction:column;justify-content:center;padding:140px 4vw 60px}
+  /* ═══ 1. קיר האותיות — פורט של Scroll Animation/62 ═══
+     במקור: 4 עקומות תלת-ממד שאותיות נעות לאורכן מעל רשת נקודות.
+     אצלנו כל שורה היא אות אחת מהמילה פ·ו·נ·ט, וכל שורה בפונט אחר
+     מהקטלוג — כך שהרקע של דף הבית עשוי מהמוצר עצמו. */
+  .sc-wall{position:relative;height:100vh;min-height:600px;background:#0a0a0a;color:#fff;overflow:hidden}
+  .sc-wall canvas{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+  .wall-letters{position:absolute;inset:0;z-index:1;overflow:hidden;pointer-events:none}
+  .wall-letters .lt{position:absolute;top:0;left:0;font-size:clamp(80px,10.5vw,168px);
+    line-height:1;color:var(--accent);will-change:transform;user-select:none}
+  /* צעיף כהה כדי שהכותרת תישאר קריאה מעל האותיות */
+  /* הטקסט יושב בצד ימין (RTL), אז הצעיף כבד מימין ומתפוגג שמאלה —
+     כך הכותרת קריאה והאותיות נשארות חיות בחצי השני של המסך */
+  .wall-scrim{position:absolute;inset:0;z-index:2;pointer-events:none;
+    background:linear-gradient(to left, rgba(10,10,10,.96) 0%, rgba(10,10,10,.9) 26%, rgba(10,10,10,.45) 52%, rgba(10,10,10,0) 78%)}
+  .wall-copy{position:relative;z-index:3;height:100%;display:flex;flex-direction:column;
+    justify-content:center;padding:0 4vw;max-width:1500px;margin-inline:auto}
   .hero-kicker{font-size:14px;letter-spacing:.28em;font-weight:700;color:var(--accent);margin-bottom:18px}
-  .sc-hero h1{font-size:clamp(44px,6.6vw,100px);font-weight:900;line-height:1.06;letter-spacing:-0.02em;max-width:18ch}
-  .sc-hero h1 .paint{color:var(--accent)}
-  .hero-sub{margin-top:22px;font-size:clamp(16px,1.8vw,19px);color:rgba(17,17,17,.65);max-width:54ch}
-  .hero-sub b{color:var(--ink)}
-  .tester-box{margin-top:44px;border:1px solid var(--line);background:#fff;padding:26px 28px 20px;transition:border-color .3s}
-  .tester-box:focus-within{border-color:var(--ink)}
+  .sc-wall h1{font-size:clamp(44px,6.6vw,104px);font-weight:900;line-height:1.06;letter-spacing:-0.02em;max-width:18ch}
+  /* צהוב ולא אדום: מילת ההדגשה יושבת בדיוק על שורת האותיות האדומה,
+     ואדום-על-אדום נבלע. */
+  .sc-wall h1 .paint{color:#ffcc00}
+  .wall-sub{margin-top:22px;font-size:clamp(16px,1.8vw,19px);color:rgba(255,255,255,.72);max-width:52ch}
+  .wall-sub b{color:#fff}
+  .wall-cta{margin-top:34px;display:flex;gap:12px;flex-wrap:wrap}
+  .wall-cta .btn-w{background:#fff;color:#0a0a0a;border:none;padding:16px 32px;font-size:16.5px;font-weight:700;transition:.25s}
+  .wall-cta .btn-w:hover{background:var(--accent);color:#fff}
+  .wall-cta .btn-o{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.45);
+    padding:16px 30px;font-size:16.5px;font-weight:700;transition:.25s}
+  .wall-cta .btn-o:hover{border-color:#fff}
+
+  /* כניסת הכותרת. חוק הברזל של הפרויקט: אנימציה לא מגלה תוכן.
+     ברירת המחדל של השורות היא המקום הסופי שלהן — הן נראות גם אם שום
+     אנימציה לא רצה; רק הוספת .in משחזרת את העלייה מהמסכה. */
+  @keyframes wallUp{ from{ transform:translateY(112%) } to{ transform:translateY(0) } }
+  .sc-wall.in .hl > span{ animation:wallUp 1.1s cubic-bezier(.16,1,.3,1) backwards }
+  .sc-wall.in .hero-kicker > span{ animation-delay:0s }
+  .sc-wall.in h1 .hl:nth-of-type(1) > span{ animation-delay:.13s }
+  .sc-wall.in h1 .hl:nth-of-type(2) > span{ animation-delay:.26s }
+
+  /* ההדר יושב על שחור עד שגוללים — הופכים אותו ללבן */
+  header.on-dark .nav-links a, header.on-dark .nav-user{color:#fff}
+  header.on-dark .nav .logo img{filter:invert(1)}
+  header.on-dark .nav-cta{background:#fff;color:#0a0a0a}
+  header.on-dark .nav-cta:hover{background:var(--accent);color:#fff}
+
+  /* ═══ 2. הטסטר — בלוק צבע מלא במקום קופסה לבנה ═══ */
+  .sc-tester{background:var(--cobalt);color:#fff;padding:96px 4vw 104px}
+  .sc-tester .t-wrap{max-width:1500px;margin-inline:auto}
+  .sc-tester h2{font-size:clamp(30px,4vw,54px);font-weight:900;line-height:1.1}
+  .hero-sub{margin-top:16px;font-size:clamp(16px,1.8vw,19px);color:rgba(255,255,255,.78);max-width:56ch}
+  .hero-sub b{color:#fff}
+  .tester-box{margin-top:38px;border:1px solid rgba(255,255,255,.35);background:transparent;padding:26px 28px 20px;transition:border-color .3s}
+  .tester-box:focus-within{border-color:#fff}
   .tester-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
-  .tester-top .t-label{font-size:13.5px;font-weight:700;color:rgba(17,17,17,.5)}
+  .tester-top .t-label{font-size:13.5px;font-weight:700;color:rgba(255,255,255,.65)}
   .font-chips{display:flex;gap:8px;flex-wrap:wrap}
-  .chip{border:1px solid var(--line);background:transparent;border-radius:0;padding:7px 14px;font-size:13.5px;font-weight:500;transition:.2s}
-  .chip:hover{border-color:var(--ink)}
-  .chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-  .tester-box .big{font-size:clamp(40px,6.4vw,92px);line-height:1.18;outline:none;word-break:break-word;min-height:1.25em;caret-color:var(--accent)}
+  .chip{border:1px solid rgba(255,255,255,.4);background:transparent;color:#fff;border-radius:0;padding:7px 14px;font-size:13.5px;font-weight:500;transition:.2s}
+  .chip:hover{border-color:#fff}
+  .chip.on{background:#fff;color:var(--cobalt);border-color:#fff}
+  .tester-box .big{font-size:clamp(40px,6.4vw,92px);line-height:1.18;outline:none;word-break:break-word;min-height:1.25em;color:#fff;caret-color:#fff}
 
   /* ═══ 2. מרקיזה ═══ */
   .sc-marquee{background:var(--ink);color:#fff;padding:18px 0;overflow:hidden}
@@ -109,7 +153,7 @@
   .poster .fmeta{position:absolute;bottom:24px;inset-inline:0;text-align:center;font-size:14.5px;font-weight:500;color:rgba(255,255,255,.85)}
 
   /* ═══ 5. תמחור ═══ */
-  .sc-pricing{padding:120px 6vw}
+  .sc-pricing{padding:120px 6vw;background:var(--soft)}
   .pr-head{text-align:center;margin-bottom:56px}
   .pr-head h2{font-size:clamp(34px,4.8vw,64px);font-weight:900;line-height:1.1}
   .pr-head p{margin-top:14px;font-size:17px;color:rgba(17,17,17,.6)}
@@ -127,14 +171,15 @@
   .pr-note{text-align:center;margin-top:32px;font-size:15px;color:rgba(17,17,17,.55)}
 
   /* ═══ 6. הצהרה + חינמיים ═══ */
-  .statement{padding:110px 6vw;text-align:center;border-top:1px solid var(--line)}
+  .statement{padding:120px 6vw;text-align:center;background:var(--accent);color:#fff}
   .statement h2{font-size:clamp(40px,6.4vw,96px);font-weight:900;line-height:1.08;letter-spacing:-0.02em}
-  .statement h2 .dot{color:var(--accent)}
-  .statement p{margin-top:16px;font-size:17px;color:rgba(17,17,17,.6)}
-  .statement .btn-big{margin-top:30px}
+  .statement h2 .dot{color:#0a0a0a}
+  .statement p{margin-top:16px;font-size:17px;color:rgba(255,255,255,.85)}
+  .statement .btn-big{margin-top:30px;background:#fff;color:var(--accent)}
+  .statement .btn-big:hover{background:#0a0a0a;color:#fff}
 
-  .sc-free{padding:0 1.5vw 110px}
-  .free-box{background:var(--green);color:#fff;padding:64px 6vw;text-align:center}
+  .sc-free{padding:0}
+  .free-box{background:var(--green);color:#fff;padding:96px 6vw 104px;text-align:center}
   .free-box h2{font-size:clamp(28px,4vw,52px);font-weight:900;line-height:1.12}
   .free-box p{margin-top:14px;font-size:16.5px;color:rgba(255,255,255,.85);max-width:600px;margin-inline:auto}
   .free-form{margin-top:30px;display:flex;justify-content:center;gap:0;flex-wrap:wrap}
@@ -146,7 +191,8 @@
   @media (max-width:760px){ .nav-links{display:none} }
 
   /* ── מצב סטטי ── */
-  html.static .sc-hero{min-height:auto;padding:150px 4vw 70px}
+  html.static .sc-wall{height:auto;min-height:0;padding:150px 0 90px}
+  html.static .wall-letters{display:none}
   html.static .poster{height:440px}
   html.static .poster .fname{transform:none!important}
 </style>
@@ -168,21 +214,39 @@
 
 <header id="siteHeader"><div id="site-header"></div></header>
 
-<!-- ═══ 1. הירו + טסטר ═══ -->
-<section class="sc-hero" id="scHero">
-  <div class="hero-kicker hl"><span>בית נגיש לפונטים</span></div>
-  <h1>
-    <span class="hl"><span>פונטים עבריים</span></span>
-    <span class="hl"><span><span class="paint">שכיף</span> לקנות.</span></span>
-  </h1>
-  <p class="hero-sub" data-reveal>33 משפחות, כל אחת במחיר אחד שכולל הכל — <b>כל המשקלים, כל השימושים, כולל מע״מ.</b> בלי טבלאות רישוי ובלי אותיות קטנות.</p>
-
-  <div class="tester-box" data-reveal>
-    <div class="tester-top">
-      <span class="t-label">תקלידו משהו — זה החלק הכיפי</span>
-      <div class="font-chips" id="fontChips"></div>
+<!-- ═══ 1. קיר האותיות (Scroll Animation/62) ═══
+     האותיות הן דקורציה בלבד: הן ממוקמות מיד בטעינה, והכותרת/CTA
+     הם HTML רגיל שלא תלוי בשום אנימציה. -->
+<section class="sc-wall" id="scWall">
+  <canvas id="wallGrid" aria-hidden="true"></canvas>
+  <div class="wall-letters" id="wallLetters" aria-hidden="true"></div>
+  <div class="wall-scrim" aria-hidden="true"></div>
+  <div class="wall-copy">
+    <div class="hero-kicker hl"><span>בית נגיש לפונטים</span></div>
+    <h1>
+      <span class="hl"><span>פונטים עבריים</span></span>
+      <span class="hl"><span><span class="paint">שכיף</span> לקנות.</span></span>
+    </h1>
+    <p class="wall-sub">33 משפחות, כל אחת במחיר אחד שכולל הכל — <b>כל המשקלים, כל השימושים, כולל מע״מ.</b></p>
+    <div class="wall-cta">
+      <button class="btn-w" onclick="go('catalog.html')">לקטלוג ←</button>
+      <button class="btn-o" onclick="go('index.html#pricing')">כמה זה עולה?</button>
     </div>
-    <div class="big" id="heroType" contenteditable="true" spellcheck="false" aria-label="נסו את הפונטים">חתונה של דנה ויובל ♥ 24.8</div>
+  </div>
+</section>
+
+<!-- ═══ 2. הטסטר ═══ -->
+<section class="sc-tester">
+  <div class="t-wrap">
+    <h2>תקלידו. זה החלק הכיפי.</h2>
+    <p class="hero-sub">כל 33 המשפחות פתוחות לניסיון — בלי הרשמה, בלי סימן מים, בלי אותיות קטנות.</p>
+    <div class="tester-box">
+      <div class="tester-top">
+        <span class="t-label">הטקסט שלכם, הפונטים שלנו</span>
+        <div class="font-chips" id="fontChips"></div>
+      </div>
+      <div class="big" id="heroType" contenteditable="true" spellcheck="false" aria-label="נסו את הפונטים">חתונה של דנה ויובל ♥ 24.8</div>
+    </div>
   </div>
 </section>
 
@@ -355,17 +419,135 @@ if (STATIC) document.documentElement.classList.add('static');
   Promise.race([ready, new Promise(r => setTimeout(r, 1500))]).then(run);
 })();
 
+/* ההדר יושב על ההירו השחור עד הגלילה הראשונה */
+document.getElementById('siteHeader').classList.add('on-dark');
 if (!STATIC) {
   smoothScroll();   /* Lenis דרך shared.js — כדי שאפשר יהיה לפרק אותו במעבר עמוד */
-  ScrollTrigger.create({ start:80, onToggle:s => document.getElementById('siteHeader').classList.toggle('scrolled', s.isActive) });
+  ScrollTrigger.create({ start:80, onToggle:st => {
+    const h = document.getElementById('siteHeader');
+    h.classList.toggle('scrolled', st.isActive);
+    h.classList.toggle('on-dark', !st.isActive);
+  }});
   /* שורות הכותרת עולות מהמסכה. אם יש פרילואודר — הוא זה שיקרא לזה
      בדיוק כשהוא נשלף, כדי שהתזמון יהיה אמיתי ולא טיימר מנוחש. */
-  window.__heroIn = () => gsap.from('.sc-hero .hl > span',
-    { yPercent:112, duration:1.1, stagger:.13, ease:'power4.out' });
+  window.__heroIn = () => document.getElementById('scWall').classList.add('in');
   /* אם הפרילואודר כבר ירד (חזרה הביתה מדף אחר) — מריצים כאן */
   const __pl = document.getElementById('preloader');
   if (!__pl || __pl.style.display === 'none') window.__heroIn();
 }
+
+/* ═══ 1. קיר האותיות — פורט של Scroll Animation/62 ═══
+   המכניקה מהמקור: ארבע עקומות תלת-ממד (CatmullRom דרך 21 נקודות)
+   שנוצרות מקשת סינוס + כיפוף ב-z; על כל עקומה 15 אלמנטי DOM שמקבלים
+   נקודה על העקומה לפי (i/14 + progress·speed) % 1, מוקרנים למסך דרך
+   מצלמת פרספקטיבה ומגיעים ליעד ב-lerp .07. מתחת — רשת נקודות על קנבס
+   שנעה עם ה-progress.
+   שתי סטיות מכוונות מהמקור:
+   1) המקור טוען את Three.js רק כדי לבנות את העקומה ולהקרין נקודות —
+      ה-WebGL עצמו מצייר קווים שחורים בלתי נראים. 21 נקודות הדגימה הן
+      דגימה של נוסחה חלקה, אז אפשר לגזור אותה ישירות; חסכנו 600KB.
+   2) המקור מצמיד את הסקשן (pin) ל-700% גלילה. בדף בית זה מרגיש תקוע,
+      אז כאן הזרימה רצה מעצמה לאט ומאיצה עם מהירות הגלילה — כמו המרקיזה. */
+(function letterWall(){
+  const stage = document.getElementById('scWall');
+  if (!stage) return;
+  const cv = document.getElementById('wallGrid'), host = document.getElementById('wallLetters');
+  const ctx = cv.getContext('2d');
+
+  /* קריאה מלמעלה למטה: פ · ו · נ · ט */
+  const ROWS = [
+    { ch:'פ', y: 10,  amp: 2, speed:.80 },
+    { ch:'ו', y: 3.5, amp: 1, speed:1.0 },
+    { ch:'נ', y:-3.5, amp:-1, speed:.70 },
+    { ch:'ט', y:-10,  amp:-2, speed:.90 },
+  ];
+  const PER = 15, FOV = 50, CAM_Z = 20;
+  const F = 1 / Math.tan(FOV / 2 * Math.PI / 180);
+  const lerp = (a,b,t) => a + (b-a)*t;
+
+  let W = 0, H = 0, dpr = 1;
+  const size = () => {
+    const r = stage.getBoundingClientRect();
+    W = r.width; H = r.height;
+    dpr = Math.min(devicePixelRatio || 1, 2);
+    cv.width = W*dpr; cv.height = H*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  };
+
+  /* הנוסחה שממנה המקור דוגם את נקודות העקומה */
+  const point = (t, row) => ({
+    x: -25 + 50*t,
+    y: row.y + Math.sin(t*Math.PI) * -row.amp,
+    z: (1 - Math.pow(Math.abs(t-.5)*2, 2)) * -5,
+  });
+  /* הקרנת פרספקטיבה — שקולה ל-Vector3.project של מצלמת המקור */
+  const project = p => {
+    const d = CAM_Z - p.z;
+    return { x:(-(p.x*F)/(d*(W/H)) * .5 + .5) * W,
+             y:(-(p.y*F)/d * .5 + .5) * H };
+  };
+
+  /* בניית האותיות. כל שורה מקבלת פונט אחר מהקטלוג ומתחלפת מדי כמה שניות
+     — כך שהרקע של דף הבית הוא סיור בקטלוג. */
+  const cells = [];
+  ROWS.forEach(row => {
+    row.els = Array.from({ length:PER }, () => {
+      const el = document.createElement('div');
+      el.className = 'lt';
+      el.textContent = row.ch;
+      host.appendChild(el);
+      const c = { el, cur:null };
+      cells.push(c);
+      row.cells = row.cells || []; row.cells.push(c);
+      return el;
+    });
+  });
+  const pool = FONTS.map(f => f.slug);
+  let fi = 0;
+  const rollFonts = () => ROWS.forEach((row, r) => {
+    const slug = pool[(fi + r*8) % pool.length];
+    row.els.forEach(el => el.style.fontFamily = `'${slug}', 'Heebo', sans-serif`);
+  });
+  rollFonts();
+
+  const place = (prog, snap) => {
+    ROWS.forEach(row => row.cells.forEach((c, i) => {
+      const t = ((i/(PER-1) + prog*row.speed) % 1 + 1) % 1;
+      const tgt = project(point(t, row));
+      if (snap || !c.cur || Math.abs(tgt.x - c.cur.x) > W*.7) c.cur = tgt;
+      else c.cur = { x:lerp(c.cur.x, tgt.x, .07), y:lerp(c.cur.y, tgt.y, .07) };
+      c.el.style.transform = `translate(-50%,-50%) translate3d(${c.cur.x.toFixed(1)}px,${c.cur.y.toFixed(1)}px,0)`;
+    }));
+  };
+
+  const drawGrid = prog => {
+    ctx.fillStyle = '#0a0a0a'; ctx.fillRect(0,0,W,H);
+    ctx.fillStyle = 'rgba(232,50,15,.55)';
+    const sp = 30, off = (prog * sp * 10) % sp;
+    for (let y = 0; y*sp < H + sp; y++)
+      for (let x = 0; x*sp < W + sp*2; x++) {
+        ctx.beginPath(); ctx.arc(x*sp - off, y*sp, 1, 0, Math.PI*2); ctx.fill();
+      }
+  };
+
+  size(); drawGrid(0); place(0, true);          /* מצב מנוחה — נראה גם בלי אנימציה */
+  addEventListener('resize', () => { size(); drawGrid(0); place(prog, true); });
+
+  let prog = 0;
+  if (STATIC) return;
+  /* לא rAF — ממשיך גם בלשונית מוסתרת. נעצר במעבר עמוד, אחרת הוא ממשיך
+     לרוץ על DOM שכבר הוסר. */
+  const rollIv = setInterval(() => { fi++; rollFonts(); }, 5200);
+  addEventListener('pt:navigated', () => clearInterval(rollIv), { once:true });
+
+  let boost = 0;
+  ScrollTrigger.create({ onUpdate:st => { boost = Math.min(Math.abs(st.getVelocity())/2600, 2.6); } });
+  addTick(() => {
+    prog += .00042 * (1 + boost);
+    place(prog, false);
+    drawGrid(prog);
+  });
+})();
 
 function splitWords(el){
   const out = [];
