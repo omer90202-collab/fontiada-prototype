@@ -45,6 +45,59 @@ const CARD_COLORS = ['#e8320f','#1439c4','#0c7a43','#5b21b6','#0e7490','#d6186e'
 const cardColor = i => CARD_COLORS[i % CARD_COLORS.length];
 const fontBySlug = s => FONTS.find(f => f.slug === s);
 
+/* ── סמן מותאם — פורט של Mouse Effects/13 (Awwwards Pack) ──
+   המכניקה מהמקור: קנבס במסך מלא עם mix-blend-mode:difference, ועליו
+   עיגול לבן שרודף את העכבר ב-lerp .25. הערבוב הופך אותו לשחור על רקע
+   בהיר וללבן על רקע כהה — לכן הוא נראה נכון בכל מקום באתר. הרדיוס
+   גדל פי ~3.5 מעל אלמנט לחיץ.
+   שתי התאמות הכרחיות: המקור משתמש ב-position:absolute + pageX/pageY,
+   מה שעובד רק בדף בלי גלילה — אצלנו fixed + clientX/clientY; ובנוסף
+   הקנבס מצויר לפי devicePixelRatio כדי שהעיגול לא ייצא מרוח במסך רטינה. */
+(function customCursor(){
+  if (!matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (new URLSearchParams(location.search).has('static')) return;
+
+  const cv = document.createElement('canvas');
+  cv.id = 'cursorCanvas';
+  cv.style.cssText = 'position:fixed;inset:0;z-index:150;pointer-events:none;mix-blend-mode:difference';
+  const ctx = cv.getContext('2d');
+
+  let w, h, dpr;
+  const size = () => {
+    dpr = Math.min(devicePixelRatio || 1, 2);
+    w = innerWidth; h = innerHeight;
+    cv.width = w * dpr; cv.height = h * dpr;
+    cv.style.width = w + 'px'; cv.style.height = h + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  };
+
+  const HOVERABLE = 'a,button,input,textarea,select,[contenteditable="true"],.fcard,.ch,.chip,.preset,.fbtn';
+  const R = 9, R_HOVER = 34;
+  let mx = innerWidth / 2, my = innerHeight / 2;
+  let x = mx, y = my, r = R, target = R, seen = false;
+
+  addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    if (!seen) { seen = true; x = mx; y = my; document.body.appendChild(cv); }
+    target = e.target && e.target.closest && e.target.closest(HOVERABLE) ? R_HOVER : R;
+  }, { passive:true });
+  addEventListener('mouseout', e => { if (!e.relatedTarget) target = R; });
+  addEventListener('resize', size);
+
+  size();
+  const lerp = (a,b,n) => (1-n)*a + n*b;
+  (function frame(){
+    x = lerp(x, mx, .25); y = lerp(y, my, .25); r = lerp(r, target, .18);
+    ctx.clearRect(0, 0, w, h);
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI*2);
+    ctx.fillStyle = '#fff';
+    ctx.fill();
+    requestAnimationFrame(frame);
+  })();
+})();
+
 /* ── עיגול פינות מונפש בריחוף על כל אלמנט לחיץ (רפרנס: blazetype.eu) ──
    הפינות מתעגלות בהדרגה עם ease קפיצי קל — לא קפיצה מיידית.
    מוזרק מכאן כדי לחול על כל דפי האתר; ה-<style> מתווסף אחרי ה-CSS של
