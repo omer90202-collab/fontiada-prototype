@@ -178,7 +178,7 @@ function splitWords(el){
 }
 
 if (!STATIC) {
-  const lenis = new Lenis({ lerp:.09 });
+  const lenis = window.lenis = new Lenis({ lerp:.09 });
   lenis.on('scroll', ScrollTrigger.update);
   gsap.ticker.add(t => lenis.raf(t*1000));
   gsap.ticker.lagSmoothing(0);

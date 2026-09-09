@@ -156,9 +156,12 @@ function renderHeader(active){
   const el = document.getElementById('site-header');
   if (!el) return;
   const u = User.get();
+  /* בדף הבית הלוגו מגלגל לראש הדף (בלי לטעון מחדש ובלי להריץ שוב את
+     הפרילואודר); בשאר הדפים הוא הדרך חזרה הביתה. */
+  const isHome = /(^\/?$|index\.html$)/.test(location.pathname);
   el.innerHTML = `
   <nav class="nav">
-    <a href="index.html" class="logo" aria-label="פונטיאדה"><img src="logo-black.svg" alt="פונטיאדה"></a>
+    <a href="${isHome ? '#top' : 'index.html'}" class="logo" aria-label="${isHome ? 'חזרה לראש הדף' : 'פונטיאדה — לדף הבית'}"><img src="logo-black.svg" alt="פונטיאדה"></a>
     <div class="nav-links">
       <a href="catalog.html" ${active==='catalog' ? 'style="font-weight:900"' : ''}>הקטלוג</a>
       <a href="index.html#free">חינמיים</a>
@@ -172,6 +175,15 @@ function renderHeader(active){
     </div>
   </nav>`;
   Cart.updateBadge();
+
+  if (isHome) {
+    el.querySelector('.logo').addEventListener('click', e => {
+      e.preventDefault();
+      /* Lenis שולט בגלילה כשהוא פעיל — צריך לבקש ממנו, אחרת הוא מחזיר אותנו */
+      if (window.lenis) window.lenis.scrollTo(0, { duration: 1 });
+      else scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
 }
 
 /* ── פוטר אחיד: מוזרק לכל דף עם <div id="site-footer"></div> ── */

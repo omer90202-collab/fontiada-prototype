@@ -300,7 +300,11 @@ if (STATIC) document.documentElement.classList.add('static');
     document.body.style.overflow = '';
     if (window.__heroIn) { window.__heroIn(); window.__heroIn = null; }
   };
-  if (STATIC || !window.gsap) { done(); return; }
+  /* רץ כשפותחים את האתר (כניסה ישירה, קישור מבחוץ, או רענון) —
+     אבל לא כשחוזרים הביתה מדף אחר באתר עצמו. */
+  const sameSiteVisit = document.referrer && new URL(document.referrer).origin === location.origin;
+  const isReload = (performance.getEntriesByType('navigation')[0] || {}).type === 'reload';
+  if (STATIC || !window.gsap || (sameSiteVisit && !isReload)) { done(); return; }
 
   document.body.style.overflow = 'hidden';
   /* רשת ביטחון: מה שיקרה — אחרי 7 שניות המסך יורד ממילא */
@@ -351,7 +355,7 @@ if (STATIC) document.documentElement.classList.add('static');
 })();
 
 if (!STATIC) {
-  const lenis = new Lenis({ lerp:.09 });
+  const lenis = window.lenis = new Lenis({ lerp:.09 });
   lenis.on('scroll', ScrollTrigger.update);
   gsap.ticker.add(t => lenis.raf(t*1000));
   gsap.ticker.lagSmoothing(0);

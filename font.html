@@ -228,7 +228,7 @@ gsap.registerPlugin(ScrollTrigger);
 const STATIC = matchMedia('(prefers-reduced-motion: reduce)').matches
             || new URLSearchParams(location.search).has('static');
 if (!STATIC) {
-  const lenis = new Lenis({ lerp:.09 });
+  const lenis = window.lenis = new Lenis({ lerp:.09 });
   lenis.on('scroll', ScrollTrigger.update);
   gsap.ticker.add(t => lenis.raf(t*1000));
   gsap.ticker.lagSmoothing(0);
