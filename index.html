@@ -200,7 +200,7 @@
 <body>
 
 <!-- ═══ 0. פרילואודר — פורט של Hero Animations/5 (Awwwards Pack).
-     במקום ברכות בשפות שונות: "פונטיאדה" מתחלף בכל 33 הפונטים שלנו,
+     במקום ברכות בשפות שונות: "פונטיאדה" מתחלף בכל 38 הפונטים שלנו,
      ואז מסך הכיסוי נשלף למעלה עם גל אלסטי (morph של path ב-SVG).
      בטיחות: התוכן מתחת אף פעם לא מוסתר ב-CSS, ויש טיימר חילוץ —
      גם אם ה-JS נופל, האתר נראה. ═══ -->
@@ -227,7 +227,7 @@
       <span class="hl"><span>פונטים עבריים</span></span>
       <span class="hl"><span><span class="paint">שכיף</span> לקנות.</span></span>
     </h1>
-    <p class="wall-sub">33 משפחות, כל אחת במחיר אחד שכולל הכל — <b>כל המשקלים, כל השימושים, כולל מע״מ.</b></p>
+    <p class="wall-sub">38 משפחות, כל אחת במחיר אחד שכולל הכל — <b>כל המשקלים, כל השימושים, כולל מע״מ.</b></p>
     <div class="wall-cta">
       <button class="btn-w" onclick="go('catalog.html')">לקטלוג ←</button>
       <button class="btn-o" onclick="go('index.html#pricing')">כמה זה עולה?</button>
@@ -239,7 +239,7 @@
 <section class="sc-tester">
   <div class="t-wrap">
     <h2>תקלידו. זה החלק הכיפי.</h2>
-    <p class="hero-sub">כל 33 המשפחות פתוחות לניסיון — בלי הרשמה, בלי סימן מים, בלי אותיות קטנות.</p>
+    <p class="hero-sub">כל 38 המשפחות פתוחות לניסיון — בלי הרשמה, בלי סימן מים, בלי אותיות קטנות.</p>
     <div class="tester-box">
       <div class="tester-top">
         <span class="t-label">הטקסט שלכם, הפונטים שלנו</span>
@@ -265,7 +265,7 @@
 <section class="home-cat">
   <div class="hc-head">
     <h2>חדשים על המדף</h2>
-    <a href="catalog.html">כל 33 הפונטים ←</a>
+    <a href="catalog.html">כל 38 הפונטים ←</a>
   </div>
   <div class="grid" id="homeGrid"></div>
   <div class="hc-more"><button class="btn-big" onclick="go('catalog.html')">לקטלוג המלא ←</button></div>
@@ -309,7 +309,7 @@
     <div class="pcard">
       <div class="pname">כל הקטלוג</div>
       <div class="pnum">₪299 <small>מחיר השקה</small></div>
-      <div class="pdesc">כל 33 הפונטים. בערך ₪9 לפונט. כן, ברצינות.</div>
+      <div class="pdesc">כל 38 הפונטים. בערך ₪8 לפונט. כן, ברצינות.</div>
     </div>
   </div>
   <div class="pr-note">להשוואה: הפונט הזול ביותר אצל המתחרים מתחיל ב-₪222 — למשקל אחד, לשימוש אחד.</div>
@@ -352,7 +352,7 @@ if (STATIC) document.documentElement.classList.add('static');
 /* ═══ 0. פרילואודר — פורט של Hero Animations/5 ═══
    המכניקה מהמקור: מילה מתחלפת במרכז מסך כהה, ואז המסך נשלף ל--100vh
    בזמן ש-path של SVG מתיישר מקשת בולטת (h+300) לקו ישר — הגל האלסטי.
-   ההתאמה שלנו: אותה מילה — "פונטיאדה" — בכל 33 הפונטים בזה אחר זה. */
+   ההתאמה שלנו: אותה מילה — "פונטיאדה" — בכל 38 הפונטים בזה אחר זה. */
 (function preloader(){
   const el = document.getElementById('preloader');
   if (!el) return;
@@ -570,7 +570,7 @@ function splitWords(el){
 /* ── טסטר חי ── */
 const heroType = document.getElementById('heroType');
 const chipsWrap = document.getElementById('fontChips');
-const heroCycle = ['neohari','nogah','katzin','rahut','sapir','tsuk'];
+const heroCycle = ['neohari','nogah','cochav','rahut','sapir','tsuk'];
 let userTouched = false, heroTimer = null, heroIdx = 0;
 function setTesterFont(slug){
   heroType.style.fontFamily = `'${slug}', 'Heebo', sans-serif`;

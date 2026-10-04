@@ -1,44 +1,52 @@
 /* ═══════════════════════════════════════════════
    פונטיאדה — נתונים ותשתית משותפת לכל דפי האתר
-   33 הפונטים הסופיים (פונטים סופיים, 2026-08-06)
+   38 הפונטים הסופיים, 58 קבצים (פונטיאדה — פונטים סופיים, 2026-10-04)
    + עגלה, משתמש (localStorage), הדר אחיד וטוסטים
    ═══════════════════════════════════════════════ */
 
 const FONTS = [
-  { slug:'aviv',    he:'אביב',   tag:'עגול וידידותי',    tier:39 },
-  { slug:'balloon', he:'בלון',   tag:'תצוגה מנופחת',     tier:59 },
-  { slug:'choresh', he:'חורש',   tag:'מכחול פראי',       tier:59 },
-  { slug:'chotam',  he:'חותם',   tag:'סטנסיל חד',        tier:39 },
-  { slug:'cochav',  he:'כוכב',   tag:'תצוגה נוצצת',      tier:39 },
-  { slug:'dagan',   he:'דגן',    tag:'נטוי וזורם',       tier:39 },
-  { slug:'erez',    he:'ארז',    tag:'יציב וגברי',       tier:39 },
-  { slug:'karmel',  he:'כרמל',   tag:'אורגני ורך',       tier:39 },
-  { slug:'katzin',  he:'קצין',   tag:'מרובע וסמכותי',    tier:39 },
-  { slug:'maor',    he:'מאור',   tag:'נקי ומאיר',        tier:39 },
-  { slug:'meged',   he:'מגד',    tag:'קלאסי מתוק',       tier:39 },
-  { slug:'nachal',  he:'נחל',    tag:'זורם וגמיש',       tier:39 },
-  { slug:'neohar',  he:'נאור',   tag:'בהיר ופתוח',       tier:39 },
-  { slug:'neohari', he:'נהוראי', tag:'הדגל שלנו',        tier:59 },
-  { slug:'nekuda',  he:'נקודה',  tag:'גיאומטרי מדויק',   tier:39 },
-  { slug:'nof',     he:'נוף',    tag:'רחב ופנורמי',      tier:39 },
-  { slug:'rahut',   he:'רהוט',   tag:'כתב יד שוטף',      tier:59 },
-  { slug:'rakia',   he:'רקיע',   tag:'אוורירי וגבוה',    tier:59 },
-  { slug:'rimon',   he:'רימון',  tag:'עסיסי ומלא',       tier:39 },
-  { slug:'tsuk',    he:'צוק',    tag:'חצוב וחזק',        tier:39 },
-  { slug:'yareach', he:'ירח',    tag:'לילי וחולמני',     tier:59 },
-  { slug:'yesod',   he:'יסוד',   tag:'בסיסי ואמין',      tier:39 },
-  { slug:'zohar',   he:'זוהר',   tag:'תצוגה זוהרת',      tier:59 },
-  { slug:'alon',    he:'אלון',   tag:'יציב וארצי',       tier:39 },
-  { slug:'barzel',  he:'ברזל',   tag:'כבד ותעשייתי',     tier:39 },
-  { slug:'katav',   he:'כתב',    tag:'כתב יד אישי',      tier:59 },
-  { slug:'kedem',   he:'קדם',    tag:'צר במיוחד',        tier:39 },
-  { slug:'migdal',  he:'מגדל',   tag:'גבוה וזקוף',       tier:39 },
-  { slug:'nogah',   he:'נוגה',   tag:'דידון אלגנטי',     tier:59 },
-  { slug:'ofek',    he:'אופק',   tag:'רחב ופתוח',        tier:39 },
-  { slug:'sahar',   he:'סהר',    tag:'מעוגל ולילי',      tier:39 },
-  { slug:'sapir',   he:'ספיר',   tag:'מלוטש ויוקרתי',    tier:59 },
-  { slug:'tavor',   he:'תבור',   tag:'מוצק כמו הר',      tier:39 },
+  { slug:'aviv',     he:'אביב',   tag:'עגול וידידותי',   tier:39 },
+  { slug:'balloon',  he:'בלון',   tag:'תצוגה מנופחת',    tier:59 },
+  { slug:'choresh',  he:'חורש',   tag:'מכחול פראי',      tier:59 },
+  { slug:'chotam',   he:'חותם',   tag:'סטנסיל חד',       tier:39, styles:['Light'] },
+  { slug:'cochav',   he:'כוכב',   tag:'תצוגה נוצצת',     tier:39, styles:['Condensed'] },
+  { slug:'dagan',    he:'דגן',    tag:'נטוי וזורם',      tier:39 },
+  { slug:'erez',     he:'ארז',    tag:'יציב וגברי',      tier:39 },
+  { slug:'karmel',   he:'כרמל',   tag:'אורגני ורך',      tier:39, styles:['Rounded'] },
+  { slug:'meged',    he:'מגד',    tag:'קלאסי מתוק',      tier:39 },
+  { slug:'nachal',   he:'נחל',    tag:'זורם וגמיש',      tier:39 },
+  { slug:'neohari',  he:'נהוראי', tag:'הדגל שלנו',       tier:59, styles:['Italic','Condensed','Rounded'] },
+  { slug:'nekuda',   he:'נקודה',  tag:'גיאומטרי מדויק',  tier:39 },
+  { slug:'rahut',    he:'רהוט',   tag:'כתב יד שוטף',     tier:59 },
+  { slug:'rakia',    he:'רקיע',   tag:'אוורירי וגבוה',   tier:59, styles:['Bold','Italic','Wide'] },
+  { slug:'rimon',    he:'רימון',  tag:'עסיסי ומלא',      tier:39 },
+  { slug:'tsuk',     he:'צוק',    tag:'חצוב וחזק',       tier:39 },
+  { slug:'yareach',  he:'ירח',    tag:'לילי וחולמני',    tier:59 },
+  { slug:'yesod',    he:'יסוד',   tag:'בסיסי ואמין',     tier:39 },
+  { slug:'zohar',    he:'זוהר',   tag:'תצוגה זוהרת',     tier:59 },
+  { slug:'alon',     he:'אלון',   tag:'יציב וארצי',      tier:39, styles:['Light','Condensed','Wide'] },
+  { slug:'barzel',   he:'ברזל',   tag:'כבד ותעשייתי',    tier:39 },
+  { slug:'katav',    he:'כתב',    tag:'כתב יד אישי',     tier:59 },
+  { slug:'kedem',    he:'קדם',    tag:'צר במיוחד',       tier:39 },
+  { slug:'migdal',   he:'מגדל',   tag:'גבוה וזקוף',      tier:39 },
+  { slug:'nogah',    he:'נוגה',   tag:'דידון אלגנטי',    tier:59, styles:['Wide'] },
+  { slug:'ofek',     he:'אופק',   tag:'רחב ופתוח',       tier:39, styles:['Italic','Condensed','Wide'] },
+  { slug:'sahar',    he:'סהר',    tag:'מעוגל ולילי',     tier:39, styles:['Wide'] },
+  { slug:'sapir',    he:'ספיר',   tag:'מלוטש ויוקרתי',   tier:59 },
+  { slug:'tavor',    he:'תבור',   tag:'מוצק כמו הר',     tier:39, styles:['Italic','Condensed','Wide'] },
+  { slug:'anaf',     he:'ענף',    tag:'צר ונקי',         tier:39 },
+  { slug:'bazak',    he:'בזק',    tag:'מהיר ונטוי',      tier:39 },
+  { slug:'chol',     he:'חול',    tag:'דק וקליל',        tier:39 },
+  { slug:'gefen',    he:'גפן',    tag:'מקושט ומסולסל',   tier:39 },
+  { slug:'hadar',    he:'הדר',    tag:'צר וחזק',         tier:39 },
+  { slug:'kaneh',    he:'קנה',    tag:'גבוה ודחוס',      tier:39 },
+  { slug:'magazine', he:'מגזין',  tag:'רחב לכותרות',     tier:39 },
+  { slug:'moni',     he:'מוני',   tag:'דחוס ונועז',      tier:39 },
+  { slug:'saar',     he:'סער',    tag:'סוער ונטוי',      tier:39 },
 ];
+
+/* שמות הסגנונות בעברית (משפחות עם כמה סגנונות) */
+const STYLE_HE = { Light:'דק', Bold:'מודגש', Italic:'נטוי', Condensed:'צר', Rounded:'מעוגל', Wide:'רחב' };
 
 /* בלוקים רוויים (כיוון ג׳) — צבעים עמוקים שלבן קריא עליהם */
 const CARD_COLORS = ['#e8320f','#1439c4','#0c7a43','#5b21b6','#0e7490','#d6186e','#b4441c','#8a6d00'];
@@ -244,8 +252,9 @@ const fontBySlug = s => FONTS.find(f => f.slug === s);
 
 /* הזרקת @font-face לכל הקטלוג */
 (function injectFonts(){
-  const css = FONTS.map(f =>
-    `@font-face{font-family:'${f.slug}';src:url('fonts/${f.slug}.woff2') format('woff2');font-display:swap;}`
+  const face = n => `@font-face{font-family:'${n}';src:url('fonts/${n}.woff2') format('woff2');font-display:swap;}`;
+  const css = FONTS.flatMap(f =>
+    [face(f.slug), ...(f.styles || []).map(st => face(f.slug + '-' + st.toLowerCase()))]
   ).join('\n');
   const s = document.createElement('style');
   s.dataset.shared = '1';

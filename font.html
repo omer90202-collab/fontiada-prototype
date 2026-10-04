@@ -167,8 +167,14 @@
 
 <div class="buy-layout">
   <div>
+    <!-- כל הסגנונות של המשפחה (רק כשיש יותר מאחד) -->
+    <div class="sect" id="stylesSect" style="margin-top:0" hidden>
+      <h2>כל <span>הסגנונות</span></h2>
+      <div class="waterfall" id="stylesList"></div>
+    </div>
+
     <!-- מפל גדלים -->
-    <div class="sect" style="margin-top:0">
+    <div class="sect" id="wfSect" style="margin-top:0">
       <h2>מפל <span>גדלים</span></h2>
       <div class="waterfall" id="waterfall"></div>
     </div>
@@ -243,7 +249,7 @@ document.documentElement.style.setProperty('--card', cardColor(fi));
 document.getElementById('crumbName').textContent = font.he;
 document.getElementById('fName').textContent = font.he;
 document.getElementById('fName').style.fontFamily = famCss;
-document.getElementById('fTag').textContent = font.tag + (font.tier === 59 ? ' · פרימיום' : '');
+document.getElementById('fTag').textContent = font.tag + (font.styles ? ` · ${font.styles.length + 1} סגנונות` : '') + (font.tier === 59 ? ' · פרימיום' : '');
 document.getElementById('fPrice').textContent = font.tier;
 document.getElementById('sbName').textContent = font.he;
 document.getElementById('sbPrice').textContent = font.tier;
@@ -268,6 +274,20 @@ PRESETS.forEach(t => {
   b.onclick = () => { testerText.textContent = t; };
   presetsWrap.appendChild(b);
 });
+
+/* ── סגנונות המשפחה ── */
+if (font.styles && font.styles.length) {
+  const sl = document.getElementById('stylesList');
+  [['', 'רגיל'], ...font.styles.map(st => ['-' + st.toLowerCase(), STYLE_HE[st] || st])].forEach(([suf, name]) => {
+    const d = document.createElement('div');
+    d.className = 'row';
+    d.style.cssText = `font-size:44px;font-family:'${font.slug}${suf}', 'Heebo', sans-serif`;
+    d.textContent = font.he + ' ' + name;
+    sl.appendChild(d);
+  });
+  document.getElementById('stylesSect').hidden = false;
+  document.getElementById('wfSect').style.marginTop = '';
+}
 
 /* ── מפל גדלים ── */
 const wf = document.getElementById('waterfall');
