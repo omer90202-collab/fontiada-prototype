@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>10 אופציות לדף הבית — פונטיאדה</title>
+<meta name="robots" content="noindex">
+<!--
+  דף הדגמה פנימי: 10 כיוונים לראש דף הבית (המסך הראשון שהגולש רואה).
+  כל אופציה היא מסך מלא עם תוכן אמיתי ופונטים אמיתיים מהקטלוג.
+  הניווט בתחתית קופץ בין האופציות. אחרי שבוחרים — בונים את הנבחרת באמת בדף הבית.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#111;--paper:#fbfaf7;--red:#e8320f;--cobalt:#1439c4;--green:#0c7a43;--violet:#5b21b6;--teal:#0e7490;--pink:#d6186e;--rust:#b4441c;--gold:#8a6d00}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Heebo',sans-serif;background:#ddd;color:var(--ink);overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit;cursor:pointer}
+
+  .opt{position:relative;min-height:100vh;overflow:hidden;display:flex;flex-direction:column;border-bottom:8px solid #ddd}
+  .tag{position:absolute;top:84px;inset-inline-end:24px;z-index:20;background:#111;color:#fff;font-size:13px;font-weight:700;padding:7px 14px;border-radius:99px;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+  .tag b{color:#ffcf5a}
+
+  /* הדר אחיד לכל אופציה */
+  .hdr{position:relative;z-index:10;display:flex;justify-content:space-between;align-items:center;padding:18px 4vw}
+  .hdr img{height:30px}
+  .hdr nav{display:flex;gap:26px;font-size:15px;font-weight:500}
+  .hdr .cta{border:1.5px solid currentColor;padding:8px 18px;font-size:14px;font-weight:700}
+  .hdr.light{color:#fff} .hdr.light img{filter:invert(1)}
+  @media (max-width:820px){.hdr nav{display:none}}
+
+  .btn{display:inline-flex;align-items:center;gap:10px;padding:15px 30px;font-size:16px;font-weight:700;border:2px solid currentColor;transition:.2s}
+  .btn.fill{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .btn.fill:hover{background:var(--red);border-color:var(--red)}
+  .btn.white{background:#fff;color:var(--ink);border-color:#fff}
+  .eyebrow{font-size:13px;letter-spacing:.2em;font-weight:700}
+
+  /* ═══ 1. טסטר ענק ═══ */
+  .o1{background:var(--cobalt);color:#fff}
+  .o1 .in{flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 4vw 6vh}
+  .o1 .typer{font-size:clamp(56px,10.5vw,170px);line-height:1.1;outline:none;margin:14px 0 26px;min-height:1.1em;word-break:break-word}
+  .o1 .chips{display:flex;gap:8px;flex-wrap:wrap}
+  .o1 .chips button{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.45);padding:7px 15px;font-size:14px;font-weight:500}
+  .o1 .chips button.on{background:#fff;color:var(--cobalt);border-color:#fff}
+  .o1 .bar{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.3);padding:20px 4vw}
+  .o1 .bar p{font-size:17px}
+
+  /* ═══ 2. המחיר הוא הכותרת ═══ */
+  .o2{background:var(--paper);display:grid;grid-template-columns:1.1fr 1fr;grid-template-rows:auto 1fr}
+  .o2 .hdr{grid-column:1/-1}
+  .o2 .price{background:var(--red);color:#fff;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:4vh 3vw}
+  .o2 .price .n{font-size:clamp(140px,22vw,360px);line-height:.95}
+  .o2 .price .l{font-size:clamp(18px,1.8vw,24px);font-weight:700;margin-top:10px}
+  .o2 .copy{display:flex;flex-direction:column;justify-content:center;padding:4vh 4vw;gap:22px}
+  .o2 h1{font-size:clamp(36px,4.4vw,66px);font-weight:900;line-height:1.08}
+  .o2 .cmp{font-size:15px;color:#666;border-inline-start:3px solid var(--red);padding-inline-start:14px}
+  @media (max-width:820px){.o2{grid-template-columns:1fr}}
+
+  /* ═══ 3. פסיפס הקטלוג ═══ */
+  .o3{background:#111}
+  .o3 .hdr{position:absolute;inset-inline:0;top:0;background:rgba(17,17,17,.55);backdrop-filter:blur(6px)}
+  .o3 .mosaic{position:absolute;inset:0;display:grid;grid-template-columns:repeat(6,1fr);grid-template-rows:repeat(3,1fr)}
+  .o3 .tile{display:grid;place-items:center;color:#fff;font-size:clamp(28px,3.6vw,58px);overflow:hidden;transition:transform .4s,filter .4s}
+  .o3 .tile:hover{transform:scale(1.04);filter:brightness(1.12);z-index:2}
+  .o3 .card{position:relative;z-index:5;margin:auto;background:var(--paper);padding:clamp(28px,4vw,52px);max-width:560px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.45)}
+  .o3 .card h1{font-size:clamp(34px,4vw,56px);font-weight:900;line-height:1.08}
+  .o3 .card p{margin:14px 0 24px;font-size:17px;color:#555}
+  @media (max-width:820px){.o3 .mosaic{grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(6,1fr)}}
+
+  /* ═══ 4. המילה שמתחלפת ═══ */
+  .o4{background:#fff}
+  .o4 .in{flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 4vw 8vh}
+  .o4 h1{font-size:clamp(48px,8vw,128px);font-weight:900;line-height:1.08}
+  .o4 .slot{display:inline-block;color:var(--red);min-width:4ch;transition:opacity .25s,transform .25s}
+  .o4 .slot.out{opacity:0;transform:translateY(-14px)}
+  .o4 p{font-size:clamp(17px,1.6vw,21px);color:#555;max-width:46ch;margin:22px 0 30px}
+  .o4 .row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+
+  /* ═══ 5. פוסטרים ═══ */
+  .o5{background:#1b1a17;color:#fff}
+  .o5 .top{display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap;padding:2vh 4vw 3vh}
+  .o5 h1{font-size:clamp(34px,4.4vw,64px);font-weight:900;line-height:1.05;max-width:16ch}
+  .o5 .rail{flex:1;display:flex;gap:18px;align-items:center;padding:0 4vw 5vh;overflow:hidden}
+  .o5 .poster{flex:none;width:clamp(200px,20vw,300px);aspect-ratio:3/4.2;display:flex;flex-direction:column;justify-content:space-between;padding:18px;color:#fff;transition:transform .35s}
+  .o5 .poster:hover{transform:translateY(-10px)}
+  .o5 .poster .nm{font-size:clamp(48px,5.4vw,84px);line-height:1}
+  .o5 .poster .mt{font-size:13px;font-weight:700;display:flex;justify-content:space-between;opacity:.9}
+  .o5 .poster.big{width:clamp(260px,26vw,380px)}
+
+  /* ═══ 6. מגזין ═══ */
+  .o6{background:#f4efe4;color:#1a1814}
+  .o6 .mast{text-align:center;padding:0 4vw;border-bottom:3px double #1a1814}
+  .o6 .mast img{height:clamp(56px,8vw,110px);margin:4px auto 6px;display:block}
+  .o6 .meta{display:flex;justify-content:space-between;font-size:13px;font-weight:700;border-top:1px solid #1a1814;padding:8px 0;margin-top:6px}
+  .o6 .cols{flex:1;display:grid;grid-template-columns:2.2fr 1fr 1fr;gap:0;padding:0 4vw}
+  .o6 .col{padding:3vh 2vw;border-inline-start:1px solid #1a1814}
+  .o6 .col:first-child{border-inline-start:0;padding-inline-start:0}
+  .o6 .kick{font-size:12.5px;font-weight:700;letter-spacing:.14em;color:var(--red)}
+  .o6 .hl{font-size:clamp(40px,5vw,78px);line-height:1.06;margin:10px 0 14px}
+  .o6 .lede{font-size:17px;line-height:1.6;columns:2;column-gap:28px}
+  .o6 .box{border:2px solid #1a1814;padding:16px;text-align:center}
+  .o6 .box .big{font-size:72px;line-height:1.1}
+  .o6 h3{font-size:22px;font-weight:900;line-height:1.2;margin:8px 0}
+  .o6 p.s{font-size:15px;line-height:1.55;color:#3b3833}
+  @media (max-width:900px){.o6 .cols{grid-template-columns:1fr}.o6 .col{border-inline-start:0;padding-inline-start:0}.o6 .lede{columns:1}}
+
+  /* ═══ 7. שורות זזות ═══ */
+  .o7{background:var(--paper)}
+  .o7 .stage{flex:1;display:flex;flex-direction:column;justify-content:center;gap:1.2vh;padding-bottom:4vh}
+  .o7 .row{display:flex;gap:4vw;white-space:nowrap;font-size:clamp(46px,7vw,112px);line-height:1.05;will-change:transform}
+  .o7 .row.acc{color:var(--red)}
+  .o7 .row.soft{color:#c9c4ba}
+  .o7 .band{background:#111;color:#fff;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;padding:22px 4vw;margin:1.4vh 0}
+  .o7 .band h1{font-size:clamp(28px,3.4vw,50px);font-weight:900}
+
+  /* ═══ 8. מניפת כרטיסים ═══ */
+  .o8{background:#efe9df}
+  .o8 .in{flex:1;display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:0 4vw 6vh;gap:3vw}
+  .o8 h1{font-size:clamp(40px,5.2vw,82px);font-weight:900;line-height:1.05}
+  .o8 p{font-size:18px;color:#555;margin:20px 0 28px;max-width:40ch}
+  .o8 .fan{position:relative;height:min(62vh,520px)}
+  .o8 .c{position:absolute;inset-inline-start:50%;top:50%;width:min(260px,24vw);aspect-ratio:3/4;margin:calc(min(260px,24vw)*-.66) calc(min(260px,24vw)*-.5);color:#fff;padding:18px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 20px 50px rgba(0,0,0,.25);transition:transform .5s cubic-bezier(.3,1.3,.5,1)}
+  .o8 .c .nm{font-size:clamp(40px,4.6vw,72px);line-height:1}
+  .o8 .c .mt{font-size:13px;font-weight:700}
+  .o8 .fan:hover .c{transform:var(--open)!important}
+  @media (max-width:900px){.o8 .in{grid-template-columns:1fr}.o8 .fan{height:360px}}
+
+  /* ═══ 9. אות אחת ═══ */
+  .o9{background:var(--paper)}
+  .o9 .in{flex:1;display:grid;grid-template-columns:1fr 1.3fr;align-items:center;padding:0 4vw 4vh;gap:3vw}
+  .o9 h1{font-size:clamp(36px,4.2vw,64px);font-weight:900;line-height:1.08}
+  .o9 p{font-size:18px;color:#555;margin:18px 0 26px;max-width:38ch}
+  .o9 .glyph{text-align:center}
+  .o9 .glyph .g{font-size:min(56vh,40vw);line-height:1;color:var(--ink)}
+  .o9 .glyph .cap{font-size:15px;font-weight:700;margin-top:6px;color:#555}
+  .o9 .glyph .cap b{color:var(--red)}
+  @media (max-width:900px){.o9 .in{grid-template-columns:1fr}}
+
+  /* ═══ 10. בשימוש אמיתי ═══ */
+  .o10{background:#e9e4da}
+  .o10 .in{flex:1;display:grid;grid-template-columns:.9fr 1.4fr;align-items:center;gap:3vw;padding:0 4vw 5vh}
+  .o10 h1{font-size:clamp(38px,4.6vw,72px);font-weight:900;line-height:1.06}
+  .o10 p{font-size:18px;color:#555;margin:18px 0 26px;max-width:38ch}
+  .o10 .collage{display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:min(11vh,90px);gap:14px}
+  .o10 .m{box-shadow:0 14px 36px rgba(0,0,0,.18);display:grid;place-items:center;text-align:center;overflow:hidden;position:relative}
+  .o10 .sign{grid-column:1/5;grid-row:1/3;background:#1d2a24;color:#f4e3b5;font-size:clamp(44px,5vw,84px);border:10px solid #5a3f22}
+  .o10 .cup{grid-column:5/7;grid-row:1/3;background:#fff;border-radius:50%;aspect-ratio:1;align-self:center;color:var(--rust);font-size:clamp(28px,2.8vw,44px)}
+  .o10 .invite{grid-column:1/3;grid-row:3/6;background:#fffdf7;color:#7a5a2a;padding:14px;font-size:clamp(26px,2.4vw,40px);line-height:1.2;border:1px solid #d9cfb8}
+  .o10 .post{grid-column:3/5;grid-row:3/6;background:var(--violet);color:#fff;font-size:clamp(34px,3.4vw,56px);line-height:1.05;padding:12px}
+  .o10 .card{grid-column:5/7;grid-row:3/5;background:#111;color:#fff;font-size:clamp(24px,2.2vw,36px)}
+  .o10 .label{grid-column:5/7;grid-row:5/6;background:var(--gold);color:#fff;font-size:clamp(20px,1.8vw,28px)}
+  .o10 .m small{position:absolute;bottom:6px;inset-inline:0;font-family:'Heebo';font-size:11px;font-weight:700;opacity:.65}
+  @media (max-width:900px){.o10 .in{grid-template-columns:1fr}}
+
+  /* ניווט בין האופציות */
+  .picker{position:fixed;bottom:16px;inset-inline:0;margin-inline:auto;width:max-content;max-width:94vw;z-index:200;display:flex;gap:4px;background:#111;padding:6px;border-radius:99px;box-shadow:0 10px 30px rgba(0,0,0,.35);overflow-x:auto}
+  .picker a{color:#fff;font-size:14px;font-weight:700;width:38px;height:38px;display:grid;place-items:center;border-radius:50%;flex:none}
+  .picker a.on,.picker a:hover{background:#ffcf5a;color:#111}
+</style>
+</head>
+<body>
+
+<script>
+/* הדר אחיד — אותו תפריט כמו באתר, כדי שכל אופציה תיראה כמו מסך אמיתי */
+const HDR = (light) => `<header class="hdr${light ? ' light' : ''}"><img src="logo-black.svg" alt="פונטיאדה"><nav><a>הקטלוג</a><a>חבילות</a><a>הרישיון</a><a>הסיפור</a><a>בלוג</a></nav><a class="cta">עגלה (0)</a></header>`;
+</script>
+
+<!-- 1 -->
+<section class="opt o1" id="o1">
+  <span class="tag"><b>1</b> · הטסטר הוא הגיבור</span>
+  <script>document.write(HDR(true))</script>
+  <div class="in">
+    <div class="eyebrow">תקלידו כאן — זה החלק הכיפי</div>
+    <div class="typer" id="o1typer" contenteditable="true" spellcheck="false">חתונה של דנה ויובל</div>
+    <div class="chips" id="o1chips"></div>
+  </div>
+  <div class="bar"><p><b>₪39 למשפחת פונט שלמה.</b> כל הסגנונות, כל השימושים, כולל מע״מ.</p><a class="btn white">לכל 38 הפונטים ←</a></div>
+</section>
+
+<!-- 2 -->
+<section class="opt o2" id="o2">
+  <span class="tag"><b>2</b> · המחיר הוא הכותרת</span>
+  <script>document.write(HDR(false))</script>
+  <div class="copy">
+    <div class="eyebrow" style="color:var(--red)">בית נגיש לפונטים</div>
+    <h1>משפחת פונט עברי שלמה. כל הסגנונות. כל השימושים. לתמיד.</h1>
+    <div class="cmp">במקומות אחרים משקל אחד עולה ₪190–245.</div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap"><a class="btn fill">לכל הפונטים ←</a><a class="btn">5 פונטים ב-₪149</a></div>
+  </div>
+  <div class="price"><div class="n" style="font-family:'tavor'">₪39</div><div class="l">כולל מע״מ · הורדה מיידית</div></div>
+</section>
+
+<!-- 3 -->
+<section class="opt o3" id="o3">
+  <span class="tag"><b>3</b> · פסיפס הקטלוג</span>
+  <script>document.write(HDR(true))</script>
+  <div class="mosaic" id="o3mosaic"></div>
+  <div class="card">
+    <h1>38 פונטים עבריים. כל אחד בצבע שלו.</h1>
+    <p>₪39 למשפחה שלמה, כולל כל הסגנונות ורישיון לכל שימוש.</p>
+    <a class="btn fill">לכל הפונטים ←</a>
+  </div>
+</section>
+
+<!-- 4 -->
+<section class="opt o4" id="o4">
+  <span class="tag"><b>4</b> · המילה שמתחלפת</span>
+  <script>document.write(HDR(false))</script>
+  <div class="in">
+    <h1>פונט מושלם ל<span class="slot" id="o4slot">חתונה</span></h1>
+    <p>38 פונטים עבריים מקוריים, לכל רגע ולכל עסק. ₪39 למשפחה שלמה, כולל מע״מ.</p>
+    <div class="row"><a class="btn fill">מצאו את הפונט שלכם ←</a><span style="color:#777;font-size:15px">כל פונט פתוח לניסיון, בלי הרשמה</span></div>
+  </div>
+</section>
+
+<!-- 5 -->
+<section class="opt o5" id="o5">
+  <span class="tag"><b>5</b> · פוסטרים (כאן ייכנסו הפוסטרים של נהוראי)</span>
+  <script>document.write(HDR(true))</script>
+  <div class="top">
+    <h1>כל פונט מקבל פוסטר משלו.</h1>
+    <div style="display:flex;gap:10px;align-items:center"><span style="font-size:15px;opacity:.75">₪39 למשפחה שלמה</span><a class="btn white">לכל הפונטים ←</a></div>
+  </div>
+  <div class="rail" id="o5rail"></div>
+</section>
+
+<!-- 6 -->
+<section class="opt o6" id="o6">
+  <span class="tag"><b>6</b> · עיתון</span>
+  <script>document.write(HDR(false))</script>
+  <div class="mast">
+    <img src="logo-black.svg" alt="פונטיאדה">
+    <div class="meta"><span>גיליון 38 · אוקטובר 2026</span><span>בית נגיש לפונטים</span><span>מחיר הגיליון: ₪39</span></div>
+  </div>
+  <div class="cols">
+    <div class="col">
+      <div class="kick">חדשות השוק</div>
+      <div class="hl" style="font-family:'nogah'">משפחת פונט עברי שלמה ב-₪39. כן, כולל מע״מ.</div>
+      <div class="lede">בעוד שבשוק הישראלי משקל אחד של פונט עולה מאות שקלים, ולעיתים צריך רישיון נפרד לדפוס, לאתר ולאפליקציה, צמד מאילת החליט שזה לא חייב להיות ככה. התוצאה: 38 משפחות פונטים מקוריות, מחיר אחד, ורישיון אחד שמותר בו הכל. <b>להמשך בקטלוג ←</b></div>
+    </div>
+    <div class="col">
+      <div class="kick">פונט השבוע</div>
+      <div class="box"><div class="big" style="font-family:'rahut'">רהוט</div><div style="font-size:13px;font-weight:700">כתב יד שוטף · ₪59</div></div>
+      <h3>למה כולם כותבים עכשיו ביד?</h3>
+      <p class="s">ההחזרה הגדולה של כתב היד לעיצוב הישראלי, ואיך משתמשים בו בלי שייראה כמו הזמנה לבר מצווה.</p>
+    </div>
+    <div class="col">
+      <div class="kick">מבצע</div>
+      <h3 style="font-size:34px">5 פונטים ב-₪149</h3>
+      <p class="s">בוחרים כל חמישה מהקטלוג. כל הסגנונות כלולים.</p>
+      <hr style="border:0;border-top:1px solid #1a1814;margin:16px 0">
+      <div class="kick">מהבלוג</div>
+      <h3>איך מתקינים פונט במק ובווינדוס</h3>
+      <p class="s">מדריך של דקה, עם צילומי מסך.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 7 -->
+<section class="opt o7" id="o7">
+  <span class="tag"><b>7</b> · שורות שזזות</span>
+  <script>document.write(HDR(false))</script>
+  <div class="stage" id="o7stage"></div>
+</section>
+
+<!-- 8 -->
+<section class="opt o8" id="o8">
+  <span class="tag"><b>8</b> · מניפת קלפים (רחפו עליה)</span>
+  <script>document.write(HDR(false))</script>
+  <div class="in">
+    <div>
+      <div class="eyebrow" style="color:var(--red)">בית נגיש לפונטים</div>
+      <h1 style="margin-top:12px">שולפים פונט, משנים את כל העיצוב.</h1>
+      <p>38 משפחות פונטים עבריים מקוריים. ₪39 למשפחה שלמה, כולל כל הסגנונות ורישיון לכל שימוש.</p>
+      <a class="btn fill">לכל הפונטים ←</a>
+    </div>
+    <div class="fan" id="o8fan"></div>
+  </div>
+</section>
+
+<!-- 9 -->
+<section class="opt o9" id="o9">
+  <span class="tag"><b>9</b> · אות אחת, 38 פונטים</span>
+  <script>document.write(HDR(false))</script>
+  <div class="in">
+    <div>
+      <div class="eyebrow" style="color:var(--red)">בית נגיש לפונטים</div>
+      <h1 style="margin-top:12px">אותה א׳. 38 אופיים שונים.</h1>
+      <p>כל פונט עוצב כאן, אות אחר אות. ₪39 למשפחה שלמה, כולל מע״מ.</p>
+      <a class="btn fill">לכל הפונטים ←</a>
+    </div>
+    <div class="glyph"><div class="g" id="o9g">א</div><div class="cap" id="o9cap"></div></div>
+  </div>
+</section>
+
+<!-- 10 -->
+<section class="opt o10" id="o10">
+  <span class="tag"><b>10</b> · בשימוש אמיתי</span>
+  <script>document.write(HDR(false))</script>
+  <div class="in">
+    <div>
+      <div class="eyebrow" style="color:var(--red)">בית נגיש לפונטים</div>
+      <h1 style="margin-top:12px">ככה זה ייראה אצלכם.</h1>
+      <p>שלט, כוס קפה, הזמנה, פוסט. 38 פונטים עבריים, ₪39 למשפחה שלמה ורישיון לכל שימוש.</p>
+      <a class="btn fill">לכל הפונטים ←</a>
+    </div>
+    <div class="collage">
+      <div class="m sign" style="font-family:'nogah'">בית קפה הדר<small style="color:#f4e3b5">נוגה</small></div>
+      <div class="m cup" style="font-family:'balloon'">בוקר<br>טוב<small>בלון</small></div>
+      <div class="m invite" style="font-family:'rahut'">דנה<br>&amp;<br>יובל<br><span style="font-size:.5em">מתחתנים · 24.8</span><small>רהוט</small></div>
+      <div class="m post" style="font-family:'tavor'">סוף עונה<br>50%-<small>תבור</small></div>
+      <div class="m card" style="font-family:'neohari'">סטודיו אורן<small>נאוהרי</small></div>
+      <div class="m label" style="font-family:'kaneh'">שמן זית כתית<small>קנה</small></div>
+    </div>
+  </div>
+</section>
+
+<nav class="picker" id="picker" aria-label="מעבר בין האופציות"></nav>
+
+<script src="shared.js"></script>
+<script>
+const COLORS = CARD_COLORS;
+const he = s => (FONTS.find(f => f.slug === s) || {}).he || s;
+
+/* 1 — טסטר ענק */
+(function(){
+  const pool = ['neohari','tavor','rahut','nogah','kaneh','balloon','gefen','magazine'];
+  const t = document.getElementById('o1typer'), chips = document.getElementById('o1chips');
+  let i = 0, touched = false;
+  const set = s => { t.style.fontFamily = `'${s}', Heebo, sans-serif`; [...chips.children].forEach(c => c.classList.toggle('on', c.dataset.s === s)); };
+  chips.innerHTML = pool.map(s => `<button data-s="${s}">${he(s)}</button>`).join('');
+  chips.onclick = e => { const b = e.target.closest('button'); if (b) { touched = true; set(b.dataset.s); } };
+  t.addEventListener('focus', () => touched = true);
+  set(pool[0]);
+  setInterval(() => { if (!touched) { i = (i + 1) % pool.length; set(pool[i]); } }, 2200);
+})();
+
+/* 3 — פסיפס */
+(function(){
+  const pick = ['neohari','tavor','rahut','nogah','kaneh','balloon','gefen','magazine','alon','sapir','bazak','zohar','chol','ofek','barzel','katav','sahar','rimon'];
+  document.getElementById('o3mosaic').innerHTML = pick.map((s, i) => `<div class="tile" style="background:${COLORS[(i * 3) % COLORS.length]};font-family:'${s}'">${he(s)}</div>`).join('');
+})();
+
+/* 4 — המילה שמתחלפת */
+(function(){
+  const words = [['חתונה','rahut'],['מסעדה','nogah'],['לוגו','tavor'],['פוסטר','kaneh'],['הזמנה','gefen'],['ילדים','balloon'],['מגזין','magazine'],['סטארטאפ','neohari']];
+  const slot = document.getElementById('o4slot'); let i = 0;
+  const show = () => { const [w, s] = words[i]; slot.textContent = w; slot.style.fontFamily = `'${s}', Heebo, sans-serif`; slot.style.fontWeight = 400; };
+  show();
+  setInterval(() => { slot.classList.add('out'); setTimeout(() => { i = (i + 1) % words.length; show(); slot.classList.remove('out'); }, 260); }, 1900);
+})();
+
+/* 5 — פוסטרים */
+(function(){
+  const pick = ['rahut','tavor','nogah','balloon','kaneh','gefen','neohari'];
+  document.getElementById('o5rail').innerHTML = pick.map((s, i) => {
+    const f = FONTS.find(x => x.slug === s) || {};
+    return `<div class="poster${i === 2 ? ' big' : ''}" style="background:${COLORS[i % COLORS.length]}"><div class="mt"><span>${f.tag || ''}</span><span>₪${f.tier || 39}</span></div><div class="nm" style="font-family:'${s}'">${he(s)}</div><div class="mt"><span>אבגדהוזחטי</span><span>${i + 1}/38</span></div></div>`;
+  }).join('');
+})();
+
+/* 7 — שורות שזזות (Hero Animations/20: שורות ענק בכיוונים מנוגדים) */
+(function(){
+  const stage = document.getElementById('o7stage');
+  const rows = [
+    { cls:'', fonts:['tavor','neohari','balloon','kaneh','nogah','magazine'] },
+    { cls:'soft', fonts:['rahut','gefen','sapir','chol','bazak','alon'] },
+  ];
+  const rowHtml = (r, dir) => `<div class="row ${r.cls}" data-dir="${dir}">${[...r.fonts, ...r.fonts].map(s => `<span style="font-family:'${s}'">${he(s)}</span>`).join('')}</div>`;
+  stage.innerHTML = rowHtml(rows[0], 1) + `<div class="band"><h1>38 פונטים עבריים. ₪39 למשפחה שלמה.</h1><a class="btn white">לכל הפונטים ←</a></div>` + rowHtml(rows[1], -1)
+    + rowHtml({ cls:'acc', fonts:['zohar','ofek','katav','sahar','barzel','rimon'] }, 1);
+  const els = [...stage.querySelectorAll('.row')]; let x = 0;
+  setInterval(() => { x += .6; els.forEach(el => { const w = el.scrollWidth / 2; el.style.transform = `translateX(${(el.dataset.dir > 0 ? x % w : -(x % w))}px)`; }); }, 16);
+})();
+
+/* 8 — מניפה */
+(function(){
+  const pick = ['nogah','tavor','rahut','balloon','neohari'];
+  document.getElementById('o8fan').innerHTML = pick.map((s, i) => {
+    const r = (i - 2) * 9, open = `rotate(${(i - 2) * 14}deg) translateX(${(i - 2) * -70}px) translateY(${Math.abs(i - 2) * 16}px)`;
+    return `<div class="c" style="background:${COLORS[(i + 1) % COLORS.length]};transform:rotate(${r}deg) translateY(${Math.abs(i - 2) * 8}px);--open:${open};z-index:${5 - Math.abs(i - 2)}"><div class="mt">₪39 · כל הסגנונות</div><div class="nm" style="font-family:'${s}'">${he(s)}</div><div class="mt">פונטיאדה</div></div>`;
+  }).join('');
+})();
+
+/* 9 — אות אחת */
+(function(){
+  const g = document.getElementById('o9g'), cap = document.getElementById('o9cap'); let i = 0;
+  const show = () => { const f = FONTS[i]; g.style.fontFamily = `'${f.slug}', Heebo, sans-serif`; cap.innerHTML = `<b>${f.he}</b> · ${f.tag} · ₪${f.tier}`; };
+  show(); setInterval(() => { i = (i + 1) % FONTS.length; show(); }, 900);
+})();
+
+/* ?only=N מציג אופציה אחת בלבד (לצילומי מסך) */
+(function(){ const n = new URLSearchParams(location.search).get('only'); if (n) document.querySelectorAll('.opt').forEach(s => { if (s.id !== 'o' + n) s.style.display = 'none'; }); })();
+
+/* ניווט בין האופציות */
+(function(){
+  const p = document.getElementById('picker');
+  p.innerHTML = Array.from({ length:10 }, (_, i) => `<a href="#o${i + 1}" data-i="${i + 1}">${i + 1}</a>`).join('');
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) [...p.children].forEach(a => a.classList.toggle('on', a.dataset.i === e.target.id.slice(1))); }), { threshold:.5 });
+  document.querySelectorAll('.opt').forEach(s => io.observe(s));
+})();
+</script>
+</body>
+</html>

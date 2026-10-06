@@ -334,6 +334,7 @@ function renderHeader(active){
       <a href="catalog.html" ${active==='catalog' ? 'style="font-weight:900"' : ''}>הקטלוג</a>
       <a href="index.html#free">חינמיים</a>
       <a href="index.html#pricing">מחירים</a>
+      <a href="blog.html" ${active==='blog' ? 'style="font-weight:900"' : ''}>בלוג</a>
       <a href="about.html" ${active==='about' ? 'style="font-weight:900"' : ''}>הסיפור</a>
       <a href="license.html" ${active==='license' ? 'style="font-weight:900"' : ''}>הרישיון</a>
     </div>
@@ -363,6 +364,7 @@ function renderFooter(){
     <span>פונטיאדה © 2026 · בית נגיש לפונטים</span>
     <div class="flinks">
       <a href="catalog.html">הקטלוג</a>
+      <a href="blog.html">בלוג</a>
       <a href="about.html">הסיפור</a>
       <a href="license.html">הרישיון ומדיניות רכישה</a>
     </div>
